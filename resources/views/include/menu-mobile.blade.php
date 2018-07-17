@@ -1,0 +1,66 @@
+<!--MENÚ MOBILE-->
+<ul id="mobile-menu" data-collapsible="accordion" class="collapsible side-nav">
+  <div class="divider"></div>
+  <li>
+      <a class="collapsible-header waves-effect blue darken-2 white-text">CONFIGURACIÓN</a>
+      <div class="collapsible-body">
+          <ul>
+              <li><a href="usuarios" class="waves-effect">USUARIOS</a></li>
+              <div class="divider"></div>
+              <li><a href="facultades" class="waves-effect">FACULTADES</a></li>
+              <div class="divider"></div>
+              <li><a href="tipos-proyectos" class="waves-effect">TIPOS DE PROYECTOS</a></li>
+              <div class="divider"></div>
+              <li><a href="tipos-investigadores" class="waves-effect">TIPOS DE INVESTIGADORES</a></li>
+              <div class="divider"></div>
+              <li><a href="tipos-grupos" class="waves-effect">TIPOS DE GRUPOS</a></li>
+              <div class="divider"></div>
+          </ul>
+      </div>
+  </li>
+  <div class="divider"></div>
+  <li>
+      <a class="collapsible-header waves-effect blue darken-2 white-text">INVESTIGACIÓN</a>
+      <div class="collapsible-body">
+          <ul>              
+              <li><a href="investigadores" class="waves-effect">INVESTIGADORES</a></li>
+              <div class="divider"></div>
+              <li><a href="grupos" class="waves-effect">GRUPOS</a></li>
+              <div class="divider"></div>
+              <li><a href="proyectos" class="waves-effect">PROYECTOS</a></li>
+              <div class="divider"></div>
+              <li><a href="proyecto-formulario" class="waves-effect">NUEVO PROYECTO</a></li>
+              <div class="divider"></div>
+          </ul>
+      </div>
+  </li>
+  <div class="divider"></div>
+  <li>
+      <a class="collapsible-header waves-effect blue darken-2 white-text">REPORTES</a>
+      <div class="collapsible-body">
+          <ul>              
+              <li><a href="reportes#fechas" class="waves-effect">INVESTIGACIONES POR FECHA</a></li>
+              <div class="divider"></div>
+              <li><a href="reportes#facultad" class="waves-effect">INVESTIGACIONES POR FACULTAD</a></li>
+              <div class="divider"></div>
+              <li><a href="reportes#escuela" class="waves-effect">INVESTIGACIONES POR ESCUELA</a></li>
+              <div class="divider"></div>
+              <li><a href="reportes#investigador" class="waves-effect">INVESTIGACIONES POR INVESTIGADOR</a></li>
+              <div class="divider"></div>
+              <li><a href="reportes#grupo" class="waves-effect">INVESTIGACIONES POR GRUPO</a></li>
+              <div class="divider"></div>
+              <li><a href="reportes#programa" class="waves-effect">INVESTIGACIONES POR PROGRAMA</a></li>
+              <div class="divider"></div>
+              <li><a href="reportes#linea" class="waves-effect">INVESTIGACIONES POR LINEA</a></li>
+          </ul>
+      </div>
+  </li>
+  <div class="divider"></div>
+  <li>
+      <a href="pass" class="collapsible-header waves-effect brown white-text">CAMBIAR CONTRASEÑA</a>
+  </li>
+  <div class="divider"></div>
+  <li>
+      <a href="logout" class="collapsible-header waves-effect red white-text">SALIR</a>
+  </li>
+</ul>
