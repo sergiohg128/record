@@ -427,6 +427,63 @@ class ControladorConfiguracion extends Controller
         }
     }
 
+    public function tipoProyectoFormulario(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $id = $request->input("id");
+                $tipoproyecto = new Tipoproyecto();
+                $modo = "nuevo";
+                if(!empty($id)){
+                    $tipoproyecto = Tipoproyecto::find($id);
+                    $modo = "editar";
+                }
+                return view('/tipo-proyecto-formulario',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'tipoproyecto'=>$tipoproyecto,
+                    'w'=>0,
+                    'modo'=>$modo
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+    
+    public function tipoProyectoFormularioPost(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            $id = $request->input("id");
+            $modo = $request->input("modo");
+            $nombre = $request->input("nombre");
+            DB::beginTransaction();
+            try{
+                if($modo=="nuevo"){
+                    $tipoproyecto = new Tipoproyecto();
+                }else{
+                    $tipoproyecto = Tipoproyecto::find($id);
+                }
+                $tipoproyecto->nombre = $nombre;
+                $tipoproyecto->save();
+                $request->session()->put("mensaje","Tipo de Proyecto Guardado");
+                DB::commit();
+                return redirect("/tipos-proyectos");
+            } 
+            catch (Exception $ex) {
+                return redirect("/index");
+            }
+        }
+        else{
+            return redirect("/index");
+        }
+    }
+
     public function tiposInvestigadores(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
         if($this->ComprobarUsuario($usuario)){
@@ -445,6 +502,63 @@ class ControladorConfiguracion extends Controller
                 return redirect ("/inicio");
             }
         }else{
+            return redirect("/index");
+        }
+    }
+
+    public function tipoinvestigadorFormulario(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $id = $request->input("id");
+                $tipoinvestigador = new TipoInvestigador();
+                $modo = "nuevo";
+                if(!empty($id)){
+                    $tipoinvestigador = TipoInvestigador::find($id);
+                    $modo = "editar";
+                }
+                return view('/tipo-investigador-formulario',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'tipoinvestigador'=>$tipoinvestigador,
+                    'w'=>0,
+                    'modo'=>$modo
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+    
+    public function tipoinvestigadorFormularioPost(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            $id = $request->input("id");
+            $modo = $request->input("modo");
+            $nombre = $request->input("nombre");
+            DB::beginTransaction();
+            try{
+                if($modo=="nuevo"){
+                    $tipoinvestigador = new TipoInvestigador();
+                }else{
+                    $tipoinvestigador = TipoInvestigador::find($id);
+                }
+                $tipoinvestigador->nombre = $nombre;
+                $tipoinvestigador->save();
+                $request->session()->put("mensaje","Tipo de Investigador Guardado");
+                DB::commit();
+                return redirect("/tipos-investigadores");
+            } 
+            catch (Exception $ex) {
+                return redirect("/index");
+            }
+        }
+        else{
             return redirect("/index");
         }
     }
@@ -470,32 +584,121 @@ class ControladorConfiguracion extends Controller
             return redirect("/index");
         }
     }
+
+    public function tipoGrupoFormulario(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $id = $request->input("id");
+                $tipogrupo = new TipoGrupo();
+                $modo = "nuevo";
+                if(!empty($id)){
+                    $tipogrupo = TipoGrupo::find($id);
+                    $modo = "editar";
+                }
+                return view('/tipo-grupo-formulario',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'tipogrupo'=>$tipogrupo,
+                    'w'=>0,
+                    'modo'=>$modo
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
     
-    public function UsuarioPost(Request $request,  Response $response) {
+    public function tipogrupoFormularioPost(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            $id = $request->input("id");
+            $modo = $request->input("modo");
+            $nombre = $request->input("nombre");
+            DB::beginTransaction();
+            try{
+                if($modo=="nuevo"){
+                    $tipogrupo = new TipoGrupo();
+                }else{
+                    $tipogrupo = TipoGrupo::find($id);
+                }
+                $tipogrupo->nombre = $nombre;
+                $tipogrupo->save();
+                $request->session()->put("mensaje","Tipo de Grupo Guardado");
+                DB::commit();
+                return redirect("/tipos-grupos");
+            } 
+            catch (Exception $ex) {
+                return redirect("/index");
+            }
+        }
+        else{
+            return redirect("/index");
+        }
+    }
+
+    public function usuarioFormulario(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $id = $request->input("id");
+                $usuario = new Usuario();
+                $modo = "nuevo";
+                if(!empty($id)){
+                    $usuario = Usuario::find($id);
+                    $modo = "editar";
+                }
+                $facultades = Facultad::where("estado","N")->orderBy("nombre")->get();
+                return view('/usuario-formulario',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'usuario'=>$usuario,
+                    'w'=>0,
+                    'modo'=>$modo,
+                    'facultades'=>$facultades
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+    
+    public function usuarioFormularioPost(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
         if($this->ComprobarUsuario($usuario)){
             $modo = $request->input("modo");
             DB::beginTransaction();
             try{
-                if($modo=="agregar"){
+                if($modo=="nuevo"){
                     $cuenta = $request->input("cuenta");
                     $anterior = Usuario::where("cuenta",$cuenta)->first();
                     if(empty($anterior)){
                         $obj = new Usuario();
-                        $obj->id_tipo = $request->input("tipo");
-                        $nombre = $request->input("nombre");
-                        $obj->nombre = $nombre;
+                        $nombres = $request->input("nombres");
+                        $obj->nombres = $nombres;
                         $paterno =$request->input("paterno");
                         $obj->paterno = $paterno;
                         $materno =$request->input("materno");
                         $obj->materno = $materno;
+                        $facultad =$request->input("facultad");
+                        $obj->id_facultad = $facultad;
                         $obj->cuenta = $cuenta;
-                        $obj->id_empresa = $usuario->id_empresa;
-                        $obj->pass = "123";
+                        $obj->password = "123";
                         $obj->save();
                     }else{
                         DB::rollback();
-                        return json_encode(["ok"=>false,"error"=>"La cuenta ya existe, ingrese otra"]);
+                        $request->session()->put("mensaje","La cuenta ya existe");
+                        return redirect("/usuarios");
                     }
                 }else if($modo=="pass"){
                     $pass = $request->input("pass");
@@ -521,7 +724,14 @@ class ControladorConfiguracion extends Controller
                     $id = $request->input("id");
                     $obj = Usuario::find($id);
                     if($modo=="editar"){
-                        $obj->id_tipo = $request->input("tipo");
+                        $nombres = $request->input("nombres");
+                        $obj->nombres = $nombres;
+                        $paterno =$request->input("paterno");
+                        $obj->paterno = $paterno;
+                        $materno =$request->input("materno");
+                        $obj->materno = $materno;
+                        $facultad =$request->input("facultad");
+                        $obj->id_facultad = $facultad;
                     }else if($modo=="eliminar"){
                         $obj->estado = "A";
                     }else if($modo=="restablecer"){
@@ -529,17 +739,19 @@ class ControladorConfiguracion extends Controller
                     }
                     $obj->save();
                 }
+                $request->session()->put("mensaje","Usuario Guardado");
                 DB::commit();
-                return json_encode(["ok"=>true,"obj"=>$obj]);
+                return redirect("/usuarios");
             } 
             catch (Exception $ex) {
                 DB::rollback();
                 $error=$exc->getMessage();
-                return json_encode(["ok"=>false,"error"=>$error]);
+                $request->session()->put("mensaje",$error);
+                return redirect("/usuarios");
             }
         }
         else{
-            return json_encode(["ok"=>false,"url"=>"index"]);
+            return redirect("/index");
         }
     }
     

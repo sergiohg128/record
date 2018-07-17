@@ -84,6 +84,104 @@ class ControladorInvestigacion extends Controller
         }
     }
 
+    public function grupoInvestigadores(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $id = $request->input("id");
+                $investigadores = InvestigadorGrupo::join("investigador","investigador_grupo.id_investigador","=","investigador.id")
+                                    ->select("investigador.*")
+                                    ->where("investigador_grupo.estado","N")->where("id_grupo",$id)->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+
+                $grupo = Grupo::find($id);
+                return view('/grupo-investigadores',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'grupo'=>$grupo,
+                    'investigadores'=>$investigadores,
+                    'w'=>0
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function grupoInvestigadorFormulario(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $grupo = $request->input("g");
+                $investigadorG = new InvestigadorGrupo();
+                $modo = "nuevo";
+                $investigadores = Investigador::
+                                join("escuela","investigador.id_escuela","escuela.id")
+                                ->where("investigador.estado","N");
+                if($usuario->id_facultad>0){
+                    $investigadores = $investigadores->where("escuela.id_facultad",$usuario->id_facultad);
+                }
+                $investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+
+                return view('/grupo-investigador-formulario',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'investigadorG'=>$investigadorG,
+                    'w'=>0,
+                    'modo'=>$modo,
+                    'grupo'=>$grupo,
+                    'investigadores'=>$investigadores
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+    
+    public function grupoInvestigadorFormularioPost(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            $id = $request->input("id");
+            $modo = $request->input("modo");
+            $nombre = $request->input("nombre");
+            DB::beginTransaction();
+            try{
+                $id_investigador = $request->input("investigador");
+                $id_grupo = $request->input("grupo");
+                if($modo=="nuevo"){
+                    $investigadorG = new InvestigadorGrupo();
+                    $investigadorx = InvestigadorGrupo::where("id_investigador",$id_investigador)->where("id_grupo",$id_grupo)->where("estado","N")->first();
+                    if($investigadorx!=null){
+                        return redirect("/grupo-investigadores?id=".$investigadorx->id_grupo);
+                    }
+                }else{
+                    $investigadorG = InvestigadorGrupo::find($id);
+                }
+                $investigadorG->id_investigador = $id_investigador;
+                $investigadorG->id_grupo = $id_grupo;
+                $investigadorG->save();
+                $request->session()->put("mensaje","Investigador Guardado");
+                DB::commit();
+                return redirect("/grupo-investigadores?id=".$investigadorG->id_grupo);
+            } 
+            catch (Exception $ex) {
+                return redirect("/index");
+            }
+        }
+        else{
+            return redirect("/index");
+        }
+    }
+
 
     public function proyectos(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');

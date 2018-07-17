@@ -19,6 +19,9 @@ Route::get('/logout','Controlador@logout');
 
 //CONFIGURACION
 Route::get('/usuarios','ControladorConfiguracion@usuarios');
+Route::get('/usuario-formulario','ControladorConfiguracion@usuarioFormulario');
+Route::post('/usuario-formulario','ControladorConfiguracion@usuarioFormularioPost');
+
 Route::get('/facultades','ControladorConfiguracion@facultades');
 Route::get('/facultad-formulario','ControladorConfiguracion@facultadFormulario');
 Route::post('/facultad-formulario','ControladorConfiguracion@facultadFormularioPost');
@@ -44,7 +47,7 @@ Route::get('/tipo-investigador-formulario','ControladorConfiguracion@tipoInvesti
 Route::post('/tipo-investigador-formulario','ControladorConfiguracion@tipoInvestigadorFormularioPost');
 
 Route::get('/tipos-grupos','ControladorConfiguracion@tiposGrupos');
-Route::post('/tipo-grupo-formulario','ControladorConfiguracion@tipoGrupoFormularioPost');
+Route::get('/tipo-grupo-formulario','ControladorConfiguracion@tipoGrupoFormulario');
 Route::post('/tipo-grupo-formulario','ControladorConfiguracion@tipoGrupoFormularioPost');
 
 //INVESTIGACION
@@ -56,6 +59,10 @@ Route::get('/grupos','ControladorInvestigacion@grupos');
 Route::get('/grupo-formulario','ControladorInvestigacion@grupoFormulario');
 Route::post('/grupo-formulario','ControladorInvestigacion@grupoFormularioPost');
 
+Route::get('/grupo-investigadores','ControladorInvestigacion@grupoInvestigadores');
+Route::get('/grupo-investigador-formulario','ControladorInvestigacion@grupoInvestigadorFormulario');
+Route::post('/grupo-investigador-formulario','ControladorInvestigacion@grupoInvestigadorFormularioPost');
+
 Route::get('/proyectos','ControladorInvestigacion@proyectos');
 Route::get('/proyecto-formulario','ControladorInvestigacion@proyectoFormulario');
 Route::post('/proyecto-formulario','ControladorInvestigacion@proyectoFormularioPost');
@@ -63,7 +70,7 @@ Route::post('/proyecto-formulario','ControladorInvestigacion@proyectoFormularioP
 
 //REPORTES
 Route::get('/reportes','ControladorReportes@reportes');
-Route::get('/reporte','ControladorReportes@reporte');
+Route::post('/reporte','ControladorReportes@reporte');
 Route::get('/reporte1','ControladorReportes@reporte1');
 Route::get('/reporte2','ControladorReportes@reporte2');
 Route::get('/reporte3','ControladorReportes@reporte3');

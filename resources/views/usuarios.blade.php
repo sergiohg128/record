@@ -7,13 +7,14 @@
         <h4>USUARIOS</h4>
       </div>
         <div class="row">
-            <a onclick="$('#modal-agregar').modal('open')" class="btn-floating btn-large waves-effect red"><i class="material-icons">add</i></a>
+            <a href="usuario-formulario" class="btn-floating btn-large waves-effect red"><i class="material-icons">add</i></a>
             <div class="col s10 offset-s1 tabla">
              <table class="centered striped responsive-table">
                <thead>
                  <th>N</th>
                  <th>Nombre</th>
                  <th>Cuenta</th>
+                 <th>Facultad</th>
                  <th>Editar</th>
                  <th>Restablecer Contraseña</th>
                  <!--<th>Desactivar</th>-->
@@ -25,7 +26,8 @@
                        <td>{{$w = $w + 1}}</td>
                        <td>{{$usuariox->completo()}}</td>
                        <td>{{$usuariox->cuenta}}</td>
-                       <td><a onclick="modalusuario({{$usuariox->id}},'editar')" class="btn green"><i class="material-icons">edit</i></a></td>
+                       <td>{{$usuariox->facultad()->nombre}}</td>
+                       <td><a href="usuario-formulario?id={{$usuariox->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
                        <td><a onclick="modalusuario({{$usuariox->id}},'restablecer')" class="btn"><i class="material-icons">replay</i></a></td>
                        <td><a onclick="modalusuario({{$usuariox->id}},'eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>
                      </tr>

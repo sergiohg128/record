@@ -18,4 +18,8 @@ class InvestigadorGrupo extends Model
     public function grupo() {
         return Grupo::find($this->id_grupo);
     }
+
+    public function completo(){
+    	return $this->paterno.' '.$this->materno.' '.$this->nombres;
+    }
 }

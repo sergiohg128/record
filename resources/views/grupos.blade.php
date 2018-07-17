@@ -15,6 +15,7 @@
                  <th>Nombre</th>
                  <th>Tipo</th>
                  <th>Proyectos</th>
+                 <th>Investigadores</th>
                  <th>Editar</th>
                  <th>Eliminar</th>
                </thead>
@@ -25,6 +26,7 @@
                        <td>{{$grupo->nombre}}</td>
                        <td>{{$grupo->tipo()->nombre}}</td>
                        <td><a href="proyectos?g={{$grupo->id}}" class="btn">{{$grupo->conteo()}}</a></td>
+                       <td><a href="grupo-investigadores?id={{$grupo->id}}" class="btn brown"><i class="material-icons">input</i></a></td>
                        <td><a href="grupo-formulario?id={{$grupo->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
                        <td><a onclick="modalusuario({{$grupo->id}},'{{$grupo->paterno}} {{$grupo->materno}} {{$grupo->nombre}}','eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>
                      </tr>
