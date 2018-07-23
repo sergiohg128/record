@@ -24,10 +24,13 @@ class Proyecto extends Model
     }
 
     public function responsable(){
-        if($this->modalidad=="I"){
-            return Investigador::find($this->id_investigador)->completo();
+        $responsables = InvestigadorProyecto::where("id_proyecto",$this->id)->count();
+        if($responsables>1){
+            return 'VARIOS';
+        }else if($responsables>0){
+            return InvestigadorProyecto::where("id_proyecto",$this->id)->first()->investigador()->completo();
         }else{
-            return Grupo::find($this->id_grupo)->nombre;       
+            return '-';
         }
     }
 

@@ -8,19 +8,21 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
+use App\Entrega;
 use App\Escuela;
 use App\Facultad;
-use App\Grupo;
 use App\Investigador;
-use App\InvestigadorGrupo;
-use App\InvestigadorGrupoProyecto;
+use App\InvestigadorProyecto;
 use App\Linea;
 use App\Programa;
 use App\Proyecto;
+use App\TipoArticulo;
 use App\TipoGrupo;
 use App\TipoInvestigador;
+use App\TipoLibro;
 use App\TipoProyecto;
 use App\Usuario;
+
 class ControladorInvestigacion extends Controller
 {
     
@@ -62,44 +64,22 @@ class ControladorInvestigacion extends Controller
         }
     }
 
-    public function grupos(Request $request,  Response $response) {
-        $usuario = $request->session()->get('usuario');
-        if($this->ComprobarUsuario($usuario)){
-            if(true){
-                $mensaje = $request->session()->get('mensaje');
-                $request->session()->forget('mensaje');
-                $grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
-                return view('/grupos',[
-                    'usuario'=>$usuario,
-                    'mensaje'=>$mensaje,
-                    'grupos'=>$grupos,
-                    'w'=>0
-                ]);
-            }else{
-                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
-                return redirect ("/inicio");
-            }
-        }else{
-            return redirect("/index");
-        }
-    }
-
-    public function grupoInvestigadores(Request $request,  Response $response) {
+    public function proyectoInvestigadores(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
         if($this->ComprobarUsuario($usuario)){
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
                 $id = $request->input("id");
-                $investigadores = InvestigadorGrupo::join("investigador","investigador_grupo.id_investigador","=","investigador.id")
-                                    ->select("investigador.*")
-                                    ->where("investigador_grupo.estado","N")->where("id_grupo",$id)->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+                $investigadores = InvestigadorProyecto::
+                                    select("investigador.*")
+                                    ->where("investigador_proyecto.estado","N")->where("id_proyecto",$id)->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
 
-                $grupo = Grupo::find($id);
-                return view('/grupo-investigadores',[
+                $proyecto = Proyecto::find($id);
+                return view('/proyecto-investigadores',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'grupo'=>$grupo,
+                    'proyecto'=>$proyecto,
                     'investigadores'=>$investigadores,
                     'w'=>0
                 ]);
@@ -112,30 +92,31 @@ class ControladorInvestigacion extends Controller
         }
     }
 
-    public function grupoInvestigadorFormulario(Request $request,  Response $response) {
+    public function investigadorProyectoFormulario(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
         if($this->ComprobarUsuario($usuario)){
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $grupo = $request->input("g");
-                $investigadorG = new InvestigadorGrupo();
+                $proyecto = $request->input("p");
+                $investigadorP = new InvestigadorProyecto();
                 $modo = "nuevo";
                 $investigadores = Investigador::
-                                join("escuela","investigador.id_escuela","escuela.id")
+                                select("investigador.*")
+                                ->join("escuela","investigador.id_escuela","escuela.id")
                                 ->where("investigador.estado","N");
                 if($usuario->id_facultad>0){
                     $investigadores = $investigadores->where("escuela.id_facultad",$usuario->id_facultad);
                 }
                 $investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
 
-                return view('/grupo-investigador-formulario',[
+                return view('/investigador-proyecto-formulario',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'investigadorG'=>$investigadorG,
+                    'investigadorP'=>$investigadorP,
                     'w'=>0,
                     'modo'=>$modo,
-                    'grupo'=>$grupo,
+                    'proyecto'=>$proyecto,
                     'investigadores'=>$investigadores
                 ]);
             }else{
@@ -147,31 +128,34 @@ class ControladorInvestigacion extends Controller
         }
     }
     
-    public function grupoInvestigadorFormularioPost(Request $request,  Response $response) {
+    public function investigadorProyectoFormularioPost(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
         if($this->ComprobarUsuario($usuario)){
-            $id = $request->input("id");
             $modo = $request->input("modo");
-            $nombre = $request->input("nombre");
+            $rol = $request->input("rol");
             DB::beginTransaction();
             try{
                 $id_investigador = $request->input("investigador");
-                $id_grupo = $request->input("grupo");
+                $id_proyecto = $request->input("proyecto");
                 if($modo=="nuevo"){
-                    $investigadorG = new InvestigadorGrupo();
-                    $investigadorx = InvestigadorGrupo::where("id_investigador",$id_investigador)->where("id_grupo",$id_grupo)->where("estado","N")->first();
+                    $investigadorP = new InvestigadorProyecto();
+                    $investigadorx = InvestigadorProyecto::where("id_investigador",$id_investigador)->where("id_proyecto",$id_proyecto)->where("estado","N")->first();
                     if($investigadorx!=null){
-                        return redirect("/grupo-investigadores?id=".$investigadorx->id_grupo);
+                        $investigadorx->rol = $rol;
+                        $investigadorx->save();
+                        DB::commit();
+                        return redirect("/proyecto?id=".$investigadorx->id_proyecto);
                     }
                 }else{
-                    $investigadorG = InvestigadorGrupo::find($id);
+                    $investigadorP = InvestigadorProyecto::find($id);
                 }
-                $investigadorG->id_investigador = $id_investigador;
-                $investigadorG->id_grupo = $id_grupo;
-                $investigadorG->save();
+                $investigadorP->id_investigador = $id_investigador;
+                $investigadorP->id_proyecto = $id_proyecto;
+                $investigadorP->rol = $rol;
+                $investigadorP->save();
                 $request->session()->put("mensaje","Investigador Guardado");
                 DB::commit();
-                return redirect("/grupo-investigadores?id=".$investigadorG->id_grupo);
+                return redirect("/proyecto?id=".$investigadorP->id_proyecto);
             } 
             catch (Exception $ex) {
                 return redirect("/index");
@@ -189,25 +173,51 @@ class ControladorInvestigacion extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
                 $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
                 $tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
                 
                 $proyectos = Proyecto::where("estado","N");
-                if(!empty($request->input("i"))){
-                    $proyectos = $proyectos->where("id_investigador",$request->input("i"));
-                }else if(!empty($request->input("g"))){
-                    $proyectos = $proyectos->where("id_grupo",$request->input("g"));
-                }
                 $proyectos = $proyectos->orderBy("fecha","desc")->get();
                 return view('/proyectos',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'grupos'=>$grupos,
                     'investigadores'=>$investigadores,
                     'tiposproyectos'=>$tiposproyectos,
                     'proyectos'=>$proyectos,
                     'w'=>0
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function proyecto(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                $id = $request->input("id");
+                $proyecto = Proyecto::find($id);
+                $investigadoresP = InvestigadorProyecto::
+                                    where("id_proyecto",$id)
+                                    ->where("estado","N")
+                                    ->orderBy("rol")
+                                    ->orderBy("id")->get();
+                $entregas = Entrega::where("id_proyecto",$id)->orderBy("id")->get();
+                
+                return view('/proyecto',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'investigadoresP'=>$investigadoresP,
+                    'proyecto'=>$proyecto,
+                    'entregas'=>$entregas,
+                    'w'=>0,
+                    'z'=>0
                 ]);
             }else{
                 $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
@@ -224,9 +234,9 @@ class ControladorInvestigacion extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
                 $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
                 $tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
+                $tiposgrupos = TipoGrupo::where("estado","N")->orderBy("nombre")->get();
                 $programas = Programa::where("estado","N")->orderBy("nombre")->get();
                 $id = $request->input("id");
                 $proyecto = new Proyecto();
@@ -243,9 +253,9 @@ class ControladorInvestigacion extends Controller
                 return view('/proyecto-formulario',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'grupos'=>$grupos,
                     'investigadores'=>$investigadores,
                     'tiposproyectos'=>$tiposproyectos,
+                    'tiposgrupos'=>$tiposgrupos,
                     'proyecto'=>$proyecto,
                     'programas'=>$programas,
                     'programax'=>$programa,
@@ -267,11 +277,12 @@ class ControladorInvestigacion extends Controller
             $id = $request->input("id");
             $modo = $request->input("modo");
             $titulo = $request->input("titulo");
-            $modalidad = $request->input("modalidad");
+            //$modalidad = $request->input("modalidad");
             $tipo_proyecto = $request->input("tipo_proyecto");
-            $investigador = $request->input("investigador");
-            $grupo = $request->input("grupo");
+            $tipo_grupo = $request->input("tipo_grupo");
+            //$investigador = $request->input("investigador");
             $fecha = $request->input("fecha");
+            $fecha2 = $request->input("fecha2");
             $linea = $request->input("linea");
             DB::beginTransaction();
             try{
@@ -281,19 +292,20 @@ class ControladorInvestigacion extends Controller
                     $proyecto = Proyecto::find($id);
                 }
                 $proyecto->titulo = $titulo;
-                $proyecto->modalidad = $modalidad;
+                // $proyecto->modalidad = $modalidad;
                 $proyecto->id_tipo_proyecto = $tipo_proyecto;
-                if($modalidad=="I"){
-                    $proyecto->id_investigador = $investigador;
-                }else if($modalidad=="G"){
-                    $proyecto->id_grupo = $grupo;
-                }
+                // if($modalidad=="I"){
+                //     $proyecto->id_investigador = $investigador;
+                // }else if($modalidad=="G"){
+                //     $proyecto->id_tipo_grupo = $tipo_grupo;
+                // }
                 if($linea>0){
                     $proyecto->id_linea = $linea;
                 }else{
                     $proyecto->id_linea = null;
                 }
                 $proyecto->fecha = $fecha;
+                $proyecto->fecha2 = $fecha2;
                 $proyecto->save();
                 $request->session()->put("mensaje","Proyecto Guardado");
                 DB::commit();
@@ -307,6 +319,73 @@ class ControladorInvestigacion extends Controller
             return redirect("/index");
         }
     }
+
+    public function entregaFormulario(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+
+                $id = $request->input("id");
+                $proyecto = $request->input("p");
+                $entrega = new Entrega();
+                $entrega->id_proyecto = $proyecto;
+                $modo = "nuevo";
+                if(!empty($id)){
+                    $entrega = Entrega::find($id);
+                    $modo = "editar";
+                }
+                return view('/entrega-formulario',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'entrega'=>$entrega,
+                    'w'=>0,
+                    'modo'=>$modo
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function entregaFormularioPost(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            $id = $request->input("id");
+            $proyecto = $request->input("proyecto");
+            $fecha = $request->input("fecha");
+            $observacion = $request->input("observacion");
+            $tipo = $request->input("tipo");
+            $modo = $request->input("modo");
+            DB::beginTransaction();
+            try{
+                if($modo=="nuevo"){
+                    $entrega = new Entrega();
+                    $entrega->id_proyecto = $proyecto;
+                }else{
+                    $entrega = Entrega::find($id);
+                }
+                $entrega->fecha = $fecha;
+                $entrega->observacion = $observacion;
+                $entrega->tipo = $tipo;
+                $entrega->save();
+                $request->session()->put("mensaje","Entrega Guardada");
+                DB::commit();
+                return redirect("/proyecto?id=".$entrega->id_proyecto);
+            } 
+            catch (Exception $ex) {
+                return redirect("/index");
+            }
+        }
+        else{
+            return redirect("/index");
+        }
+    }
+
 
     public function investigadorFormulario(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
@@ -375,68 +454,6 @@ class ControladorInvestigacion extends Controller
                 $request->session()->put("mensaje","Investigador Guardado");
                 DB::commit();
                 return redirect("/investigadores");
-            } 
-            catch (Exception $ex) {
-                return redirect("/index");
-            }
-        }
-        else{
-            return redirect("/index");
-        }
-    }
-
-    public function grupoFormulario(Request $request,  Response $response) {
-        $usuario = $request->session()->get('usuario');
-        if($this->ComprobarUsuario($usuario)){
-            if(true){
-                $mensaje = $request->session()->get('mensaje');
-                $request->session()->forget('mensaje');
-                $tiposgrupos = TipoGrupo::where("estado","N")->orderBy("nombre")->get();
-                $id = $request->input("id");
-                $grupo = new Grupo();
-                $modo = "nuevo";
-                if(!empty($id)){
-                    $grupo = Grupo::find($id);
-                    $modo = "editar";
-                }
-                return view('/grupo-formulario',[
-                    'usuario'=>$usuario,
-                    'mensaje'=>$mensaje,
-                    'tiposgrupos'=>$tiposgrupos,
-                    'grupo'=>$grupo,
-                    'w'=>0,
-                    'modo'=>$modo
-                ]);
-            }else{
-                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
-                return redirect ("/inicio");
-            }
-        }else{
-            return redirect("/index");
-        }
-    }
-    
-    public function grupoFormularioPost(Request $request,  Response $response) {
-        $usuario = $request->session()->get('usuario');
-        if($this->ComprobarUsuario($usuario)){
-            $id = $request->input("id");
-            $modo = $request->input("modo");
-            $nombre = $request->input("nombre");
-            $tipo_grupo = $request->input("tipo_grupo");
-
-            DB::beginTransaction();
-            try{
-                if($modo=="nuevo"){
-                    $grupo = new Grupo();
-                }else{
-                    $grupo = Grupo::find($id);
-                }
-                $grupo->nombre = $nombre;
-                $grupo->id_tipo_grupo = $tipo_grupo;
-                $grupo->save();
-                $request->session()->put("mensaje","Grupo Guardado");
-                DB::commit();
-                return redirect("/grupos");
             } 
             catch (Exception $ex) {
                 return redirect("/index");

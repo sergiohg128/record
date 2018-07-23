@@ -16,7 +16,8 @@
 		            	<input type="text" name="titulo" required id="titulo" value="{{$proyecto->titulo}}">
 		            	<label for="titulo">Titulo</label>
 		            </div>
-		            <div class="col s12">
+		            
+		            <!-- <div class="col s12">
 			            <label for="modalidad">Modalidad</label>
 			            <div class="col s12 input-field">
 			            	<select id="modalidad" name="modalidad" required class="browser-default" style="width:100%;" onchange="cambiarmodalidad();">
@@ -26,17 +27,7 @@
 			            	</select>
 			            </div>
 		            </div>
-		            <div class="col s12">
-			            <label for="tipo_proyecto">Tipo de Proyecto</label>
-			            <div class="col s12 input-field">
-			            	<select id="tipo_proyecto" name="tipo_proyecto" required class="browser-default" style="width:100%;">
-			            		<option value="">Elija un tipo</option>
-			            		@foreach($tiposproyectos as $tipoproyecto)
-			            			<option value="{{$tipoproyecto->id}}" @if($proyecto->id_tipo_proyecto==$tipoproyecto->id) selected @endif>{{$tipoproyecto->nombre}}</option>
-			            		@endforeach
-			            	</select>
-			            </div>
-		            </div>
+		            
 		            <div class="col s12" id="investigadores">
 			            <label for="investigador">Investigador</label>
 			            <div class="col s12 input-field">
@@ -47,14 +38,26 @@
 			            		@endforeach
 			            	</select>
 			            </div>
-		            </div>
+		            </div> -->
+
 		            <div class="col s12" id="grupos">
-			            <label for="grupo">Grupos</label>
+			            <label for="grupo">Tipo de Grupo</label>
 			            <div class="col s12 input-field">
-			            	<select id="grupo" name="grupo" required class="browser-default" style="width:100%;">
-			            		<option value="">Elija un grupo</option>
-			            		@foreach($grupos as $grupo)
+			            	<select id="grupo" name="tipogrupo" required class="browser-default" style="width:100%;">
+			            		<option value="">Elija un tipo</option>
+			            		@foreach($tiposgrupos as $grupo)
 			            			<option value="{{$grupo->id}}" @if($proyecto->id_grupo==$grupo->id) selected @endif>{{$grupo->nombre}}</option>
+			            		@endforeach
+			            	</select>
+			            </div>
+		            </div>
+		            <div class="col s12">
+			            <label for="tipo_proyecto">Tipo de Proyecto</label>
+			            <div class="col s12 input-field">
+			            	<select id="tipo_proyecto" name="tipo_proyecto" required class="browser-default" style="width:100%;">
+			            		<option value="">Elija un tipo</option>
+			            		@foreach($tiposproyectos as $tipoproyecto)
+			            			<option value="{{$tipoproyecto->id}}" @if($proyecto->id_tipo_proyecto==$tipoproyecto->id) selected @endif>{{$tipoproyecto->nombre}}</option>
 			            		@endforeach
 			            	</select>
 			            </div>
@@ -79,9 +82,15 @@
 			            </div>
 		            </div>
 		            <div class="col s12">
-			            <label for="fecha">Fecha</label>
+			            <label for="fecha">Fecha de presentación</label>
 			            <div class="col s12 input-field">
 			            	<input type="date" name="fecha" required id="fecha" value="{{$proyecto->fecha}}">
+			            </div>        		
+		            </div>
+		            <div class="col s12">
+			            <label for="fecha">Fecha final</label>
+			            <div class="col s12 input-field">
+			            	<input type="date" name="fecha2" required id="fecha2" value="{{$proyecto->fecha2}}">
 			            </div>        		
 		            </div>
 	        	</div>

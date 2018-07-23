@@ -27,7 +27,6 @@
             </a>
             <ul id="dropdown_investigacion" class="dropdown-content">
                 <li><a href="investigadores" class="waves-effect">INVESTIGADORES</a></li>
-                <li><a href="grupos" class="waves-effect">GRUPOS</a></li>
                 <li><a href="proyectos" class="waves-effect">PROYECTOS</a></li>
                 <li><a href="proyecto-formulario" class="waves-effect">NUEVO PROYECTO</a></li>
             </ul>

@@ -25,8 +25,6 @@
           <ul>              
               <li><a href="investigadores" class="waves-effect">INVESTIGADORES</a></li>
               <div class="divider"></div>
-              <li><a href="grupos" class="waves-effect">GRUPOS</a></li>
-              <div class="divider"></div>
               <li><a href="proyectos" class="waves-effect">PROYECTOS</a></li>
               <div class="divider"></div>
               <li><a href="proyecto-formulario" class="waves-effect">NUEVO PROYECTO</a></li>

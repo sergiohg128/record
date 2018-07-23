@@ -64,8 +64,15 @@ Route::get('/grupo-investigador-formulario','ControladorInvestigacion@grupoInves
 Route::post('/grupo-investigador-formulario','ControladorInvestigacion@grupoInvestigadorFormularioPost');
 
 Route::get('/proyectos','ControladorInvestigacion@proyectos');
+Route::get('/proyecto','ControladorInvestigacion@proyecto');
 Route::get('/proyecto-formulario','ControladorInvestigacion@proyectoFormulario');
 Route::post('/proyecto-formulario','ControladorInvestigacion@proyectoFormularioPost');
+Route::get('/investigador-proyecto-formulario','ControladorInvestigacion@investigadorProyectoFormulario');
+Route::post('/investigador-proyecto-formulario','ControladorInvestigacion@investigadorProyectoFormularioPost');
+
+Route::get('/entrega-formulario','ControladorInvestigacion@entregaFormulario');
+Route::post('/entrega-formulario','ControladorInvestigacion@entregaFormularioPost');
+
 
 
 //REPORTES

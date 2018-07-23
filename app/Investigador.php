@@ -20,7 +20,7 @@ class Investigador extends Model
     }
 
     public function conteo(){
-    	return Proyecto::where("id_investigador",$this->id)->where("estado","N")->count();
+    	return InvestigadorProyecto::where("id_investigador",$this->id)->where("estado","N")->count();
     }
 
     public function escuela(){

@@ -10,17 +10,18 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use App\Escuela;
 use App\Facultad;
-use App\Grupo;
 use App\Investigador;
-use App\InvestigadorGrupo;
-use App\InvestigadorGrupoProyecto;
+use App\InvestigadorProyecto;
 use App\Linea;
 use App\Programa;
 use App\Proyecto;
+use App\TipoArticulo;
 use App\TipoGrupo;
 use App\TipoInvestigador;
+use App\TipoLibro;
 use App\TipoProyecto;
 use App\Usuario;
+
 
 use PDF;
 use Dompdf\Dompdf;

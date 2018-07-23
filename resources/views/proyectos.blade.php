@@ -16,6 +16,7 @@
                  <th>Tipo</th>
                  <th>Linea</th>
                  <th>Ver</th>
+                 <th>Editar</th>
                  <th>Eliminar</th>
                </thead>
                <tbody id="filas">
