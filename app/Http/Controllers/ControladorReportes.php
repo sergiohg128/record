@@ -123,7 +123,7 @@ class ControladorReportes extends Controller
                 $programas = Programa::where("estado","N")->orderBy("nombre")->get();
                 $lineas = Linea::where("estado","N")->orderBy("nombre")->get();
                 $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
-                $grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
+                //$grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
 
                 $hoy = date('Y-m-d');
                 $desde = date('Y');
@@ -135,7 +135,7 @@ class ControladorReportes extends Controller
                     'programas'=>$programas,
                     'lineas'=>$lineas,
                     'investigadores'=>$investigadores,
-                    'grupos'=>$grupos,
+                    //'grupos'=>$grupos,
                     'desde'=>$desde,
                     'hoy'=>$hoy,
                     'w'=>0
@@ -156,9 +156,10 @@ class ControladorReportes extends Controller
         $hasta = $request->input("hasta");
 
         $proyectos = Proyecto::
-                        leftjoin("investigador","proyecto.id_investigador","investigador.id")
+                        leftjoin("investigador_proyecto","proyecto.id","investigador_proyecto.id_proyecto")
+                        ->leftjoin("investigador","investigador_proyecto.id_investigador","investigador.id")
                         ->leftjoin("escuela","investigador.id_escuela","escuela.id")
-                        ->join("linea","proyecto.id_linea","linea.id")
+                        ->leftjoin("linea","proyecto.id_linea","linea.id")
                         ->where("proyecto.estado","N");
         if(!empty($desde)){
             $proyectos = $proyectos->where("fecha",">=",$desde);
@@ -177,7 +178,7 @@ class ControladorReportes extends Controller
                 $proyectos = $proyectos->where("escuela.id",$request->input("escuela"));
                 break;
             case 4:
-                $proyectos = $proyectos->where("investigador.id",$request->input("investigador"));
+                $proyectos = $proyectos->where("investigador_proyecto.id_investigador",$request->input("investigador"));
                 break;
             case 5:
                 $proyectos = $proyectos->where("proyecto.id_grupo",$request->input("grupo"));

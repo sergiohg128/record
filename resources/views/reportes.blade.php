@@ -165,48 +165,6 @@
         
         <div class="row">
             <div class="col s10 offset-s1 center card">
-                <div class="titulo row" id="grupo">
-                    <h5>INVESTIGACIONES POR GRUPO</h5>
-                </div>
-                <form method="POST" action="reporte" target="_blank">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="tipo" value="5">
-                    <div class="col s12 m6 l5 input-field">
-                        GRUPO
-                        <select name="grupo" id="grupos"  style="width:100%;" class="browser-default">
-                          <option value="0">Elija una grupo</option>
-                          @forelse($grupos as $grupo)
-                              <option value="{{$grupo->id}}">{{$grupo->nombre}}</option>
-                          @empty
-                              <option value="0">No hay grupos</option>
-                          @endforelse
-                        </select>
-                    </div>
-                    <div class="col s12 m6 l3 center input-field">
-                        <div class="col s3">
-                            <label>Desde</label>
-                        </div>
-                        <div class="col s9">
-                            <input type="date" name="desde" value="">
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l3 center input-field">
-                        <div class="col s3">
-                            <label>Hasta</label>
-                        </div>
-                        <div class="col s9">
-                            <input type="date" name="hasta" value="">
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l1 input-field">
-                        <button type="submit" class="btn"><i class="material-icons">input</i></button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col s10 offset-s1 center card">
                 <div class="titulo row" id="programa">
                     <h5>INVESTIGACIONES POR PROGRAMAS</h5>
                 </div>
