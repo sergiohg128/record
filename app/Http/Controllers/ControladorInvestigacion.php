@@ -361,6 +361,7 @@ class ControladorInvestigacion extends Controller
             $observacion = $request->input("observacion");
             $tipo = $request->input("tipo");
             $modo = $request->input("modo");
+            $archivo = $request->file("cert");
             DB::beginTransaction();
             try{
                 if($modo=="nuevo"){
@@ -372,7 +373,11 @@ class ControladorInvestigacion extends Controller
                 $entrega->fecha = $fecha;
                 $entrega->observacion = $observacion;
                 $entrega->tipo = $tipo;
+
+                $ext = $archivo->getClientOriginalExtension();
+                $entrega->extension = $ext;
                 $entrega->save();
+                \Storage::disk('entrega')->put($entrega->id.".".$ext,  \File::get($archivo));
                 $request->session()->put("mensaje","Entrega Guardada");
                 DB::commit();
                 return redirect("/proyecto?id=".$entrega->id_proyecto);
@@ -460,6 +465,26 @@ class ControladorInvestigacion extends Controller
             }
         }
         else{
+            return redirect("/index");
+        }
+    }
+
+    public function DescargarArchivo(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            $entrega = Entrega::find($request->input("id"));
+            
+            $storage_path = storage_path();
+            $url = $storage_path.'/app/entrega/'.$entrega->id.'.'.$entrega->extension;
+            //verificamos si el archivo existe y lo retornamos
+            if (Storage::disk('entrega')->exists($entrega->id.'.'.$entrega->extension))
+            {
+              $nombre = 'acreditacion.'.$entrega->extension;
+              return response()->download($url,$nombre);
+            }
+            //si no se encuentra lanzamos un error 404.
+            abort(404);
+        }else{
             return redirect("/index");
         }
     }

@@ -73,7 +73,7 @@ Route::post('/investigador-proyecto-formulario','ControladorInvestigacion@invest
 Route::get('/entrega-formulario','ControladorInvestigacion@entregaFormulario');
 Route::post('/entrega-formulario','ControladorInvestigacion@entregaFormularioPost');
 
-
+Route::get('/download/archivo','ControladorInvestigacion@DescargarArchivo');
 
 //REPORTES
 Route::get('/reportes','ControladorReportes@reportes');

@@ -7,7 +7,7 @@
         <h4>FORMULARIO DE ENTREGA</h4>
       </div>
         <div class="row">
-        	<form action="entrega-formulario" method="POST">
+        	<form action="entrega-formulario" method="POST"  enctype="multipart/form-data">
         		{{ csrf_field() }}
         		<input type="hidden" name="modo" value="nuevo">
         		<input type="hidden" name="proyecto" value="{{$entrega->id_proyecto}}">
@@ -20,6 +20,7 @@
 			            		<option value="1">Registro de proyecto</option>
 			            		<option value="2">Avance</option>
 			            		<option value="3">Entrega Final de proyecto</option>
+			            		<option value="4">Acreditación</option>
 			            	</select>
 			            </div>
 		            </div>
@@ -34,6 +35,17 @@
 			            <div class="col s12 input-field">
 			            	<input type="text" name="observacion" id="observacion" value="{{$entrega->observacion}}">
 			            </div>        		
+		            </div>
+		            <div class="col s12">
+			            <div class="file-field input-field">
+					      <div class="btn">
+					        <span>Archivo</span>
+					        <input type="file" name="cert">
+					      </div>
+					      <div class="file-path-wrapper">
+					        <input class="file-path validate" type="text" name="arch">
+					      </div>
+					    </div>     		
 		            </div>
 	        	</div>
 	            <div class="row center">

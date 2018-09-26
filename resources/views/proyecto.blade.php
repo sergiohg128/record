@@ -57,6 +57,7 @@
                  <th>Tipo</th>
                  <th>Fecha</th>
                  <th>Observación</th>
+                 <th>Descargar</th>
                </thead>
                <tbody id="filas">
                  @forelse($entregas as $entrega)
@@ -69,10 +70,13 @@
                           Avance
                          @elseif($entrega->tipo==3)
                           Entrega Final de proyecto
+                        @elseif($entrega->tipo==4)
+                          Acreditación
                          @endif
                        </td>
                        <td>{{date('d/m/Y',strtotime($entrega->fecha))}}</td>
                        <td>{{$entrega->observacion}}</td>
+                       <td><a href="download/archivo?id={{$entrega->id}}" target="_blank"><button class="btn"><i class="material-icons">input</i></button></td>
                      </tr>
                  @empty
                      <tr id="filaempty">
