@@ -22,6 +22,10 @@ use App\TipoInvestigador;
 use App\TipoLibro;
 use App\TipoProyecto;
 use App\Usuario;
+use App\UsuarioSelgestiun;
+use App\ProyectoSelgestiun;
+use App\TramiteSelgestiun;
+use App\FaseSelgestiun;
 
 class ControladorInvestigacion extends Controller
 {
@@ -178,13 +182,65 @@ class ControladorInvestigacion extends Controller
                 
                 $proyectos = Proyecto::where("estado","N");
                 $proyectos = $proyectos->orderBy("fecha","desc")->get();
+
+                $proyectosSelgestiunEstudiantes = TramiteSelgestiun::join("tb_proyecto as p","p.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                                    ->join("tb_funcion as f","f.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                                    ->join("tb_usuario as u","u.tb_usuario_id","f.tb_usuario_id")
+                                                    ->where("f.tb_funcion_nombre","AUTOR")
+                                                    ->where("p.tb_tipoproyecto_id",7)
+                                                    ->orderBy("p.tb_proyecto_id")
+                                                    ->get();
+
+                $proyectosSelgestiunDocentes = TramiteSelgestiun::join("tb_proyecto as p","p.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                                    ->join("tb_funcion as f","f.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                                    ->join("tb_usuario as u","u.tb_usuario_id","f.tb_usuario_id")
+                                                    ->where("f.tb_funcion_nombre","AUTOR")
+                                                    ->where("p.tb_tipoproyecto_id",8)
+                                                    ->orderBy("p.tb_proyecto_id")
+                                                    ->get();
                 return view('/proyectos',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
                     'investigadores'=>$investigadores,
                     'tiposproyectos'=>$tiposproyectos,
                     'proyectos'=>$proyectos,
-                    'w'=>0
+                    'proyectosSelgestiunEstudiantes'=>$proyectosSelgestiunEstudiantes,
+                    'proyectosSelgestiunDocentes'=>$proyectosSelgestiunDocentes,
+                    'w'=>0,
+                    'y'=>0,
+                    'z'=>0
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function proyectoSelgestiun(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                
+                $id = $request->input("id");
+                $tramite = TramiteSelgestiun::find($id);
+                $proyecto = ProyectoSelgestiun::where("tb_tramite_id",$id)->first();
+                $fases = FaseSelgestiun::join("tb_datosfase as df","df.tb_fase_numero","tb_fase.tb_fase_numero")
+                            ->where("tb_tramite_id",$id)->get();
+
+                return view('/proyecto-selgestiun',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'tramite'=>$tramite,
+                    'proyecto'=>$proyecto,
+                    'fases'=>$fases,
+                    'w'=>0,
+                    'y'=>0,
+                    'z'=>0
                 ]);
             }else{
                 $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");

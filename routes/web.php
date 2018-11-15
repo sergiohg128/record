@@ -87,3 +87,8 @@ Route::get('/reporte6','ControladorReportes@reporte6');
 Route::get('/reporte7','ControladorReportes@reporte7');
 Route::get('/reporte8','ControladorReportes@reporte8');
 Route::get('/reporte9','ControladorReportes@reporte9');
+
+
+//SELGESTIUN
+
+Route::get('/proyecto-selgestiun','ControladorInvestigacion@proyectoSelgestiun');
