@@ -16,7 +16,7 @@ class Proyecto extends Model
     }
 
     public function investigador() {
-        return Investigador::find($this->id_investigador);
+        return UsuarioSelgestiun::find($this->id_investigador);
     }
 
     public function grupo() {

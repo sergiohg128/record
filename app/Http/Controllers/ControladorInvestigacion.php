@@ -26,6 +26,8 @@ use App\UsuarioSelgestiun;
 use App\ProyectoSelgestiun;
 use App\TramiteSelgestiun;
 use App\FaseSelgestiun;
+use App\FuncionSelgestiun;
+use App\ArchivoSelgestiun;
 
 class ControladorInvestigacion extends Controller
 {
@@ -52,38 +54,21 @@ class ControladorInvestigacion extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+                //$investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+
+                $investigadores = UsuarioSelgestiun::select("tb_usuario.*","te.tb_escuela_nombre","tti.tb_tipoinvestigador_nombre")
+                                                    ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
+                                                    ->join("tb_escuela as te","te.tb_escuela_id","tp.tb_escuela_id")
+                                                    ->join("tb_tipoinvestigador as tti","tti.tb_tipoinvestigador_id","tb_usuario.tb_tipoinvestigador_id")
+                                                    ->where("tb_permiso_cargo","DOCENTE")
+                                                    ->where("tb_permiso_estado","ACTIVO")
+                                                    ->orderBy("tb_usuario_apellidopaterno")
+                                                    ->orderBy("tb_usuario_apellidomaterno")
+                                                    ->orderBy("tb_usuario_nombre")
+                                                    ->get();
                 return view('/investigadores',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'investigadores'=>$investigadores,
-                    'w'=>0
-                ]);
-            }else{
-                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
-                return redirect ("/inicio");
-            }
-        }else{
-            return redirect("/index");
-        }
-    }
-
-    public function proyectoInvestigadores(Request $request,  Response $response) {
-        $usuario = $request->session()->get('usuario');
-        if($this->ComprobarUsuario($usuario)){
-            if(true){
-                $mensaje = $request->session()->get('mensaje');
-                $request->session()->forget('mensaje');
-                $id = $request->input("id");
-                $investigadores = InvestigadorProyecto::
-                                    select("investigador.*")
-                                    ->where("investigador_proyecto.estado","N")->where("id_proyecto",$id)->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
-
-                $proyecto = Proyecto::find($id);
-                return view('/proyecto-investigadores',[
-                    'usuario'=>$usuario,
-                    'mensaje'=>$mensaje,
-                    'proyecto'=>$proyecto,
                     'investigadores'=>$investigadores,
                     'w'=>0
                 ]);
@@ -105,14 +90,24 @@ class ControladorInvestigacion extends Controller
                 $proyecto = $request->input("p");
                 $investigadorP = new InvestigadorProyecto();
                 $modo = "nuevo";
-                $investigadores = Investigador::
-                                select("investigador.*")
-                                ->join("escuela","investigador.id_escuela","escuela.id")
-                                ->where("investigador.estado","N");
-                if($usuario->id_facultad>0){
-                    $investigadores = $investigadores->where("escuela.id_facultad",$usuario->id_facultad);
-                }
-                $investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+                //$investigadores = Investigador::
+                //                select("investigador.*")
+                //                ->join("escuela","investigador.id_escuela","escuela.id")
+                //                ->where("investigador.estado","N");
+
+                //if($usuario->id_facultad>0){
+                //    $investigadores = $investigadores->where("escuela.id_facultad",$usuario->id_facultad);
+                //}
+                //$investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+
+                $investigadores = UsuarioSelgestiun::select("tb_usuario.*")
+                                                    ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
+                                                    ->where("tb_permiso_cargo","DOCENTE")
+                                                    ->where("tb_permiso_estado","ACTIVO")
+                                                    ->orderBy("tb_usuario_apellidopaterno")
+                                                    ->orderBy("tb_usuario_apellidomaterno")
+                                                    ->orderBy("tb_usuario_nombre")
+                                                    ->get();
 
                 return view('/investigador-proyecto-formulario',[
                     'usuario'=>$usuario,
@@ -177,8 +172,8 @@ class ControladorInvestigacion extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
-                $tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
+                
+                //$tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
                 
                 $proyectos = Proyecto::where("estado","N");
                 $proyectos = $proyectos->orderBy("fecha","desc")->get();
@@ -201,8 +196,7 @@ class ControladorInvestigacion extends Controller
                 return view('/proyectos',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'investigadores'=>$investigadores,
-                    'tiposproyectos'=>$tiposproyectos,
+                    
                     'proyectos'=>$proyectos,
                     'proyectosSelgestiunEstudiantes'=>$proyectosSelgestiunEstudiantes,
                     'proyectosSelgestiunDocentes'=>$proyectosSelgestiunDocentes,
@@ -219,37 +213,7 @@ class ControladorInvestigacion extends Controller
         }
     }
 
-    public function proyectoSelgestiun(Request $request,  Response $response) {
-        $usuario = $request->session()->get('usuario');
-        if($this->ComprobarUsuario($usuario)){
-            if(true){
-                $mensaje = $request->session()->get('mensaje');
-                $request->session()->forget('mensaje');
-                
-                $id = $request->input("id");
-                $tramite = TramiteSelgestiun::find($id);
-                $proyecto = ProyectoSelgestiun::where("tb_tramite_id",$id)->first();
-                $fases = FaseSelgestiun::join("tb_datosfase as df","df.tb_fase_numero","tb_fase.tb_fase_numero")
-                            ->where("tb_tramite_id",$id)->get();
-
-                return view('/proyecto-selgestiun',[
-                    'usuario'=>$usuario,
-                    'mensaje'=>$mensaje,
-                    'tramite'=>$tramite,
-                    'proyecto'=>$proyecto,
-                    'fases'=>$fases,
-                    'w'=>0,
-                    'y'=>0,
-                    'z'=>0
-                ]);
-            }else{
-                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
-                return redirect ("/inicio");
-            }
-        }else{
-            return redirect("/index");
-        }
-    }
+    
 
     public function proyecto(Request $request,  Response $response) {
         $usuario = $request->session()->get('usuario');
@@ -290,7 +254,7 @@ class ControladorInvestigacion extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+                //$investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
                 $tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
                 $tiposgrupos = TipoGrupo::where("estado","N")->orderBy("nombre")->get();
                 $programas = Programa::where("estado","N")->orderBy("nombre")->get();
@@ -309,7 +273,7 @@ class ControladorInvestigacion extends Controller
                 return view('/proyecto-formulario',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    'investigadores'=>$investigadores,
+                    //'investigadores'=>$investigadores,
                     'tiposproyectos'=>$tiposproyectos,
                     'tiposgrupos'=>$tiposgrupos,
                     'proyecto'=>$proyecto,
@@ -540,6 +504,79 @@ class ControladorInvestigacion extends Controller
             }
             //si no se encuentra lanzamos un error 404.
             abort(404);
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function proyectoSelgestiun(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                
+                $id = $request->input("id");
+                $tramite = TramiteSelgestiun::find($id);
+                $proyecto = ProyectoSelgestiun::join("tb_area as ta","tb_proyecto.tb_area_id","ta.tb_area_id")
+                                            ->join("tb_linea as tl","tb_proyecto.tb_linea_id","tl.tb_linea_id")
+                                            ->join("tb_sublinea as ts","tb_proyecto.tb_sublinea_id","ts.tb_sublinea_id")
+                                            ->where("tb_tramite_id",$id)->first();
+                $fases = FaseSelgestiun::join("tb_datosfase as df","df.tb_datosfase_numero","tb_fase.tb_fase_numero")
+                            ->where("tb_tramite_id",$id)->get();
+
+                $miembros1 = FuncionSelgestiun::
+                join("tb_usuario as tu","tb_funcion.tb_usuario_id","tu.tb_usuario_id")
+                ->where("tb_tramite_id",$id)->where("tb_funcion_nombre","AUTOR")->orderBy("tb_funcion_nombre")->get();
+                $miembros2 = FuncionSelgestiun::
+                join("tb_usuario as tu","tb_funcion.tb_usuario_id","tu.tb_usuario_id")
+                ->where("tb_tramite_id",$id)->whereNotIn("tb_funcion_nombre",["AUTOR","JEFE DE CI","SECRETARIO DE CI"])->orderBy("tb_funcion_nombre")->get();
+
+
+                return view('/proyecto-selgestiun',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'tramite'=>$tramite,
+                    'proyecto'=>$proyecto,
+                    'fases'=>$fases,
+                    'miembros1'=>$miembros1,
+                    'miembros2'=>$miembros2
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function faseSelgestiun(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                
+                $id = $request->input("id");
+                
+                $fase = FaseSelgestiun::join("tb_datosfase as df","df.tb_datosfase_numero","tb_fase.tb_fase_numero")
+                            ->where("tb_fase_id",$id)->first();
+
+                $archivos = ArchivoSelgestiun::
+                join("tb_fase_archivo as tfa","tfa.tb_archivo_id","tb_archivo.tb_archivo_id")
+                ->where("tb_fase_id",$id)->get();
+
+                return view('/fase-selgestiun',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    'fase'=>$fase,
+                    'archivos'=>$archivos
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
         }else{
             return redirect("/index");
         }

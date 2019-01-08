@@ -134,7 +134,7 @@
                         <select name="investigador" id="investigadores" style="width: 100%;" class="browser-default">
                           <option value="0">Todos</option>
                           @forelse($investigadores as $investigador)
-                              <option value="{{$investigador->id}}">{{$investigador->completo()}}</option>
+                              <option value="{{$investigador->tb_usuario_id}}">{{$investigador->completo()}}</option>
                           @empty
                               <option value="0">No hay investigadores</option>
                           @endforelse

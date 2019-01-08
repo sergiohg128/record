@@ -92,3 +92,4 @@ Route::get('/reporte9','ControladorReportes@reporte9');
 //SELGESTIUN
 
 Route::get('/proyecto-selgestiun','ControladorInvestigacion@proyectoSelgestiun');
+Route::get('/fase-selgestiun','ControladorInvestigacion@faseSelgestiun');

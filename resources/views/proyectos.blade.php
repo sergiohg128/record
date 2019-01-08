@@ -77,7 +77,7 @@
                <thead>
                  <th>N</th>
                  <th>Titulo</th>
-                 <th>Estudiante</th>
+                 <th>Docente</th>
                  <th>Ver</th>
                </thead>
                <tbody id="filas">

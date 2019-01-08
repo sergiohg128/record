@@ -21,6 +21,12 @@ use App\TipoInvestigador;
 use App\TipoLibro;
 use App\TipoProyecto;
 use App\Usuario;
+use App\UsuarioSelgestiun;
+use App\ProyectoSelgestiun;
+use App\TramiteSelgestiun;
+use App\FaseSelgestiun;
+use App\FuncionSelgestiun;
+use App\ArchivoSelgestiun;
 
 
 use PDF;
@@ -122,9 +128,16 @@ class ControladorReportes extends Controller
                 $escuelas = Escuela::where("estado","N")->orderBy("nombre")->get();
                 $programas = Programa::where("estado","N")->orderBy("nombre")->get();
                 $lineas = Linea::where("estado","N")->orderBy("nombre")->get();
-                $investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+                //$investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
                 //$grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
-
+                $investigadores = UsuarioSelgestiun::select("tb_usuario.*")
+                                                    ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
+                                                    ->where("tb_permiso_cargo","DOCENTE")
+                                                    ->where("tb_permiso_estado","ACTIVO")
+                                                    ->orderBy("tb_usuario_apellidopaterno")
+                                                    ->orderBy("tb_usuario_apellidomaterno")
+                                                    ->orderBy("tb_usuario_nombre")
+                                                    ->get();
                 $hoy = date('Y-m-d');
                 $desde = date('Y');
                 return view('/reportes',[
@@ -156,7 +169,8 @@ class ControladorReportes extends Controller
         $hasta = $request->input("hasta");
 
         $proyectos = Proyecto::
-                        leftjoin("investigador_proyecto","proyecto.id","investigador_proyecto.id_proyecto")
+                        select("proyecto.id","proyecto.titulo","proyecto.id_tipo_proyecto","proyecto.id_linea","proyecto.fecha")
+                        ->leftjoin("investigador_proyecto","proyecto.id","investigador_proyecto.id_proyecto")
                         ->leftjoin("investigador","investigador_proyecto.id_investigador","investigador.id")
                         ->leftjoin("escuela","investigador.id_escuela","escuela.id")
                         ->leftjoin("linea","proyecto.id_linea","linea.id")
@@ -191,15 +205,13 @@ class ControladorReportes extends Controller
                 break;
         }
         $proyectos = $proyectos->orderBy("fecha")->get();
+
+        
+
         $dompdf = new Dompdf();
         $dompdf->setPaper('A4','landscape');
         $html = $this->head;
-        // switch($tipo){
-        //     case 1:
-        //         $html = $html .'<div class="centro"><h4>REPORTE POR FECHAS ENTRE</h4></div>
-        //                      <br>';
-        //         break;
-        // }
+
         $html = $html.
                     '<table class="tablacuerpo">
                         <tr>
@@ -225,7 +237,51 @@ class ControladorReportes extends Controller
                         </tr>';
         }
 
-        $html = $html . '</table></body></html>';
+        $html = $html . '</table>';
+
+
+        //SELGESTIUN
+        if($tipo==4){
+            $proyectos2 = ProyectoSelgestiun::join("tb_tramite","tb_proyecto.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                            ->join("tb_funcion as tf","tf.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                            ->where("tf.tb_usuario_id",$request->input("investigador"))
+                                            //->where("tf.tb_tramite_id","tb_tramite.tb_tramite_id")
+                                            ->where("tb_tramite_estado","<>",14)
+                                            ->get();
+
+
+            $html = $html . '<div class="centro"><h2>SELGESTIUN</h2></div>
+                     <br>';
+
+            $html = $html.
+                    '<table class="tablacuerpo">
+                        <tr>
+                            <th>N°</th>
+                            <th>Titulo</th>
+                            <th>Cargo</th>
+                            <th>Estado</th>
+                        </tr>';
+
+            foreach($proyectos2 as $proyecto){
+                $estado = "PENDIENTE";
+                if($proyecto->tb_tramite_estado == 13 || $proyecto->tb_tramite_estado == 24){
+                    $estado = "FINALIZADO";
+                }
+                $cont++;
+                $html = $html.
+                            '<tr>
+                                <td>'.$cont.'</td>
+                                <td>'.$proyecto->tb_proyecto_titulo.'</td>
+                                <td>'.$proyecto->tb_funcion_nombre.'</td>
+                                <td>'.$estado.'</td>
+                            </tr>';
+            }
+            $html = $html . '</table>';
+        }
+
+
+        $html = $html .'</body></html>';
+
 
         $dompdf->loadHtml($html, 'UTF-8');
         $dompdf->render();

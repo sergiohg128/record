@@ -4,42 +4,69 @@
     <!--Cuerpo-->
     <div class="row cuerpo">
       <div class="row titulo center">
-        <h4>PROYECTO</h4>
-        <h5></h5>
+        <h4>{{$proyecto->tb_proyecto_titulo}}</h4>
       </div>
-        <div class="row">
-            <div class="col s10 offset-s1 tabla">
-             <table class="centered striped responsive-table">
+      <div class="row">
+        <div class="col s10 offset-s1">
+          <h5>Resumen: </h5><p>{{$proyecto->tb_proyecto_resumen}}</p>
+          <h5>Objetivo general: </h5><p>{{$proyecto->tb_proyecto_objetivogeneral}}</p>
+          <h5>Objetivos específicos: </h5><p>{{$proyecto->tb_proyecto_objetivoespecifico}}</p>
+          <h5>Resumen: </h5><p>{{$proyecto->tb_proyecto_resumen}}</p>
+          <h5>Área: </h5><p>{{$proyecto->tb_area_nombre}}</p>
+          <h5>Linea: </h5><p>{{$proyecto->tb_linea_nombre}}</p>
+          <h5>Sublinea: </h5><p>{{$proyecto->tb_sublinea_nombre}}</p>
+        </div>
+      </div>
+      <div class="row titulo center">
+        <h4>MIEMBROS</h4>
+      </div>
+      <div class="row">
+        <div class="col s10 offset-s1">
+          <table class="centered striped responsive-table">
                <thead>
-                 <th>N</th>
                  <th>Nombre</th>
-                 <th>Responsable</th>
-                 <th>Tipo</th>
-                 <th>Linea</th>
-                 <th>Ver</th>
-                 <th>Editar</th>
-                 <th>Eliminar</th>
+                 <th>Función</th>
                </thead>
                <tbody id="filas">
-                 @forelse($proyectos as $proyecto)
-                    <tr id="fila{{$proyecto->id}}">
-                       <td>{{$w = $w + 1}}</td>
-                       <td class="left">{{$proyecto->titulo}}</td>
-                       <td>{{$proyecto->responsable()}}</td>
-                       <td>{{$proyecto->tipo()->nombre}}</td>
-                       <td>{{$proyecto->linea()->nombre}}</td>
-                       <td><a href="proyecto?id={{$proyecto->id}}" class="btn"><i class="material-icons">input</i></a></td>
-                       <td><a href="proyecto-formulario?id={{$proyecto->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
-                       <td><a onclick="modalproyecto({{$proyecto->id}},'eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>
+                 @foreach($miembros1 as $miembro)
+                    <tr>
+                       <td>{{$miembro->tb_usuario_apellidopaterno}} {{$miembro->tb_usuario_apellidomaterno}} {{$miembro->tb_usuario_nombre}}</td>
+                       <td>{{$miembro->tb_funcion_nombre}}</td>
                      </tr>
-                 @empty
-                     <tr id="filaempty">
-                         <td colspan="6">No hay proyectos</td>
+                 @endforeach
+                 @foreach($miembros2 as $miembro)
+                    <tr>
+                       <td>{{$miembro->tb_usuario_apellidopaterno}} {{$miembro->tb_usuario_apellidomaterno}} {{$miembro->tb_usuario_nombre}}</td>
+                       <td>{{$miembro->tb_funcion_nombre}}</td>
                      </tr>
-                 @endforelse
+                 @endforeach
                </tbody>
              </table>
-           </div>
         </div>
+      </div>
+
+      <div class="row titulo center">
+        <h4>FASES</h4>
+      </div>
+      <div class="row">
+        <div class="col s10 offset-s1">
+          <table class="centered striped responsive-table">
+               <thead>
+                 <th>Fase</th>
+                 <th>Fecha</th>
+                 <th>Ir</th>
+               </thead>
+               <tbody id="filas">
+                 @foreach($fases as $fase)
+                    <tr>
+                       <td>{{$fase->tb_datosfase_nombre}}</td>
+                       <td>{{$fase->tb_fase_fecha}}</td>
+                       <td><a href="fase-selgestiun?id={{$fase->tb_fase_id}}"><button class="btn"><i class="material-icons">input</i></button></a></td>
+                     </tr>
+                 @endforeach
+               </tbody>
+             </table>
+        </div>
+      </div>
     </div>
     @include('include.footer')

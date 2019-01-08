@@ -1,4 +1,4 @@
-    @include('include.head')
+investigadores2.blade.php    @include('include.head')
     @include('include.menu')
     @include('include.menu-mobile')
     <!--Cuerpo-->
@@ -17,16 +17,20 @@
                  <th>Escuela</th>
                  <th>Tipo</th>
                  <th>Proyectos</th>
+                 <th>Editar</th>
+                 <th>Eliminar</th>
                </thead>
                <tbody id="filas">
                  @forelse($investigadores as $investigador)
                     <tr id="fila{{$investigador->id}}">
                        <td>{{$w = $w + 1}}</td>
-                       <td>{{$investigador->tb_usuario_grado}}</td>
+                       <td>{{$investigador->grado}}</td>
                        <td>{{$investigador->completo()}}</td>
-                       <td>{{$investigador->tb_escuela_nombre}}</td>
-                       <td>{{$investigador->tb_tipoinvestigador_nombre}}</td>
-                       <td><a href="proyectos?i={{$investigador->tb_usuario_id}}" class="btn"><i class="material-icons">input</i></a></td>
+                       <td>{{$investigador->escuela()->nombre}}</td>
+                       <td>{{$investigador->tipo()->nombre}}</td>
+                       <td><a href="proyectos?i={{$investigador->id}}" class="btn">{{$investigador->conteo()}}</a></td>
+                       <td><a href="investigador-formulario?id={{$investigador->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
+                       <td><a onclick="modalusuario({{$investigador->id}},'{{$investigador->paterno}} {{$investigador->materno}} {{$investigador->nombre}}','eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>
                      </tr>
                  @empty
                      <tr id="filaempty">

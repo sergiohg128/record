@@ -12,7 +12,7 @@ class InvestigadorProyecto extends Model
     public $timestamps = false;
     
     public function investigador() {
-        return Investigador::find($this->id_investigador);
+        return UsuarioSelgestiun::find($this->id_investigador);
     }
 
     public function proyecto() {
@@ -20,7 +20,7 @@ class InvestigadorProyecto extends Model
     }
 
     public function completo(){
-        $investigador = Investigador::find($this->id_investigador);
-    	return $investigador->paterno.' '.$investigador->materno.' '.$investigador->nombres;
+        $investigador = UsuarioSelgestiun::find($this->id_investigador);
+    	return $investigador->tb_usuario_apellidopaterno.' '.$investigador->tb_usuario_apellidomaterno.' '.$investigador->tb_usuario_nombre;
     }
 }

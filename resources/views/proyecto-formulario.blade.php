@@ -17,28 +17,6 @@
 		            	<label for="titulo">Titulo</label>
 		            </div>
 		            
-		            <!-- <div class="col s12">
-			            <label for="modalidad">Modalidad</label>
-			            <div class="col s12 input-field">
-			            	<select id="modalidad" name="modalidad" required class="browser-default" style="width:100%;" onchange="cambiarmodalidad();">
-			            		<option value="">Elija una modalidad</option>
-			            		<option value="I" @if($proyecto->modalidad=="I") selected @endif>Individual</option>
-			            		<option value="G" @if($proyecto->modalidad=="G") selected @endif>Grupal</option>
-			            	</select>
-			            </div>
-		            </div>
-		            
-		            <div class="col s12" id="investigadores">
-			            <label for="investigador">Investigador</label>
-			            <div class="col s12 input-field">
-			            	<select id="investigador" name="investigador" required class="browser-default" style="width:100%;">
-			            		<option value="">Elija un investigador</option>
-			            		@foreach($investigadores as $investigador)
-			            			<option value="{{$investigador->id}}" @if($proyecto->id_investigador==$investigador->id) selected @endif>{{$investigador->completo()}}</option>
-			            		@endforeach
-			            	</select>
-			            </div>
-		            </div> -->
 
 		            <div class="col s12" id="grupos">
 			            <label for="grupo">Tipo de Grupo</label>
