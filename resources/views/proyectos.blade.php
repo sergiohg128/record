@@ -40,7 +40,7 @@
                      </tr>
                  @empty
                      <tr id="filaempty">
-                         <td colspan="6">No hay proyectos</td>
+                         <td colspan="8">No hay proyectos</td>
                      </tr>
                  @endforelse
                </tbody>

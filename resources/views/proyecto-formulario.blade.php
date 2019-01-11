@@ -24,7 +24,7 @@
 			            	<select id="grupo" name="tipogrupo" required class="browser-default" style="width:100%;">
 			            		<option value="">Elija un tipo</option>
 			            		@foreach($tiposgrupos as $grupo)
-			            			<option value="{{$grupo->id}}" @if($proyecto->id_grupo==$grupo->id) selected @endif>{{$grupo->nombre}}</option>
+			            			<option value="{{$grupo->id}}" @if($proyecto->id_tipo_grupo==$grupo->id) selected @endif>{{$grupo->nombre}}</option>
 			            		@endforeach
 			            	</select>
 			            </div>
@@ -71,6 +71,10 @@
 			            	<input type="date" name="fecha2" required id="fecha2" value="{{$proyecto->fecha2}}">
 			            </div>        		
 		            </div>
+		            <div class="col s12" style="margin-top: 40px;">
+		            	<label>PUBLICACIÓN</label>
+	                  <textarea id="informacion" name="informacion">{{$proyecto->informacion}}</textarea>
+	                </div>
 	        	</div>
 	            <div class="row center">
 	            	<div class="col s12">
@@ -84,7 +88,15 @@
 
 
     <script>
-    	cambiarmodalidad();
+    	//cambiarmodalidad();
+
+    	$("#informacion").cleditor(
+	      {
+	        height: 500,
+	        styles:     [["Párrafo", "<p>"], ["Encabezado 1", "<h1>"], ["Encabezado 2", "<h2>"],
+	                    ["Encabezado 3", "<h3>"],  ["Encabezado 4","<h4>"],  ["Encabezado 5","<h5>"],
+	                    ["Encabezado 6","<h6>"]],
+	      }).focus();
 
     	function cambiarmodalidad(){
     		$('#investigadores').hide();
@@ -139,4 +151,6 @@
     	@if($programa->id>0)
     		cambiarprograma();
     	@endif
+
+
     </script>

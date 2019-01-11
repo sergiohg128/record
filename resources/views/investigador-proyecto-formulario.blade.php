@@ -18,7 +18,7 @@
 			            	<select id="investigador" name="investigador" required class="browser-default" style="width:100%;">
 			            		<option value="">Elija un investigador</option>
 			            		@foreach($investigadores as $investigador)
-			            			<option value="{{$investigador->tb_usuario_id}}">{{$investigador->completo()}}</option>
+			            			<option value="{{$investigador->tb_usuario_id}}">{{$investigador->completo()}} ({{$investigador->tb_permiso_cargo}})</option>
 			            		@endforeach
 			            	</select>
 			            </div>

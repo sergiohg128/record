@@ -56,11 +56,11 @@ class ControladorInvestigacion extends Controller
                 $request->session()->forget('mensaje');
                 //$investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
 
-                $investigadores = UsuarioSelgestiun::select("tb_usuario.*","te.tb_escuela_nombre","tti.tb_tipoinvestigador_nombre")
+                $investigadores = UsuarioSelgestiun::select("tb_usuario.*","te.tb_escuela_nombre","tti.tb_tipoinvestigador_nombre","tb_permiso_cargo")
                                                     ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
                                                     ->join("tb_escuela as te","te.tb_escuela_id","tp.tb_escuela_id")
                                                     ->join("tb_tipoinvestigador as tti","tti.tb_tipoinvestigador_id","tb_usuario.tb_tipoinvestigador_id")
-                                                    ->where("tb_permiso_cargo","DOCENTE")
+                                                    ->whereIn("tb_permiso_cargo",["DOCENTE","ALUMNO"])
                                                     ->where("tb_permiso_estado","ACTIVO")
                                                     ->orderBy("tb_usuario_apellidopaterno")
                                                     ->orderBy("tb_usuario_apellidomaterno")
@@ -100,9 +100,9 @@ class ControladorInvestigacion extends Controller
                 //}
                 //$investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
 
-                $investigadores = UsuarioSelgestiun::select("tb_usuario.*")
+                $investigadores = UsuarioSelgestiun::select("tb_usuario.*","tb_permiso_cargo")
                                                     ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
-                                                    ->where("tb_permiso_cargo","DOCENTE")
+                                                    ->whereIn("tb_permiso_cargo",["DOCENTE","ALUMNO"])
                                                     ->where("tb_permiso_estado","ACTIVO")
                                                     ->orderBy("tb_usuario_apellidopaterno")
                                                     ->orderBy("tb_usuario_apellidomaterno")
@@ -299,11 +299,12 @@ class ControladorInvestigacion extends Controller
             $titulo = $request->input("titulo");
             //$modalidad = $request->input("modalidad");
             $tipo_proyecto = $request->input("tipo_proyecto");
-            $tipo_grupo = $request->input("tipo_grupo");
+            $tipo_grupo = $request->input("tipogrupo");
             //$investigador = $request->input("investigador");
             $fecha = $request->input("fecha");
             $fecha2 = $request->input("fecha2");
             $linea = $request->input("linea");
+            $informacion = $request->input("informacion");
             DB::beginTransaction();
             try{
                 if($modo=="nuevo"){
@@ -317,7 +318,7 @@ class ControladorInvestigacion extends Controller
                 // if($modalidad=="I"){
                 //     $proyecto->id_investigador = $investigador;
                 // }else if($modalidad=="G"){
-                //     $proyecto->id_tipo_grupo = $tipo_grupo;
+                $proyecto->id_tipo_grupo = $tipo_grupo;
                 // }
                 if($linea>0){
                     $proyecto->id_linea = $linea;
@@ -326,10 +327,11 @@ class ControladorInvestigacion extends Controller
                 }
                 $proyecto->fecha = $fecha;
                 $proyecto->fecha2 = $fecha2;
+                $proyecto->informacion= $informacion;
                 $proyecto->save();
                 $request->session()->put("mensaje","Proyecto Guardado");
                 DB::commit();
-                return redirect("/proyectos");
+                return redirect("/proyecto?id=".$proyecto->id);
             } 
             catch (Exception $ex) {
                 return redirect("/index");
