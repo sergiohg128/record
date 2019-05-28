@@ -11,8 +11,6 @@
               <div class="divider"></div>
               <li><a href="tipos-proyectos" class="waves-effect">TIPOS DE PROYECTOS</a></li>
               <div class="divider"></div>
-              <li><a href="tipos-investigadores" class="waves-effect">TIPOS DE INVESTIGADORES</a></li>
-              <div class="divider"></div>
               <li><a href="tipos-grupos" class="waves-effect">TIPOS DE GRUPOS</a></li>
               <div class="divider"></div>
           </ul>
@@ -22,10 +20,12 @@
   <li>
       <a class="collapsible-header waves-effect blue darken-2 white-text">INVESTIGACIÓN</a>
       <div class="collapsible-body">
-          <ul>              
-              <li><a href="investigadores" class="waves-effect">INVESTIGADORES</a></li>
+          <ul>
+              <li><a href="proyectose" class="waves-effect">ESTUDIANTES SELGESTIUN</a></li>
               <div class="divider"></div>
-              <li><a href="proyectos" class="waves-effect">PROYECTOS</a></li>
+              <li><a href="proyectosd" class="waves-effect">DOCENTES SELGESTIUN</a></li>
+              <div class="divider"></div>
+              <li><a href="proyectos" class="waves-effect">OTROS</a></li>
               <div class="divider"></div>
               <li><a href="proyecto-formulario" class="waves-effect">NUEVO PROYECTO</a></li>
               <div class="divider"></div>

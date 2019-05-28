@@ -16,7 +16,6 @@
                 <li><a href="usuarios" class="waves-effect">USUARIOS</a></li>
                 <li><a href="facultades" class="waves-effect">FACULTADES</a></li>
                 <li><a href="tipos-proyectos" class="waves-effect">TIPOS DE PROYECTOS</a></li>
-                <li><a href="tipos-investigadores" class="waves-effect">TIPOS DE INVESTIGADORES</a></li>
                 <li><a href="tipos-grupos" class="waves-effect">TIPOS DE GRUPOS</a></li>
             </ul>
         </li>
@@ -26,8 +25,9 @@
                 <i class="material-icons right">arrow_drop_down</i>
             </a>
             <ul id="dropdown_investigacion" class="dropdown-content">
-                <li><a href="investigadores" class="waves-effect">INVESTIGADORES</a></li>
-                <li><a href="proyectos" class="waves-effect">PROYECTOS</a></li>
+                <li><a href="proyectose" class="waves-effect">ESTUDIANTES SELGESTIUN</a></li>
+                <li><a href="proyectosd" class="waves-effect">DOCENTES SELGESTIUN</a></li>
+                <li><a href="proyectos" class="waves-effect">OTROS</a></li>
                 <li><a href="proyecto-formulario" class="waves-effect">NUEVO PROYECTO</a></li>
             </ul>
         </li>

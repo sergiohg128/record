@@ -40,7 +40,7 @@
 			            	</select>
 			            </div>
 		            </div>
-		            <div class="col s12">
+		            <!-- <div class="col s12">
 			            <label for="programa">Programa</label>
 			            <div class="col s12 input-field">
 			            	<select id="programa" name="programa" class="browser-default" style="width:100%;" onchange="cambiarprograma();">
@@ -58,7 +58,7 @@
 			            		<option value="">Sin linea</option>
 			            	</select>
 			            </div>
-		            </div>
+		            </div> -->
 		            <div class="col s12">
 			            <label for="fecha">Fecha de presentación</label>
 			            <div class="col s12 input-field">

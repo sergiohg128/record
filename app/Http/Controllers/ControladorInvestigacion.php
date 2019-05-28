@@ -176,7 +176,33 @@ class ControladorInvestigacion extends Controller
                 //$tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
                 
                 $proyectos = Proyecto::where("estado","N");
-                $proyectos = $proyectos->orderBy("fecha","desc")->get();
+                $proyectos = $proyectos->orderBy("fecha","desc")->paginate(20);
+
+                return view('/proyectos',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    
+                    'proyectos'=>$proyectos,
+                    'w'=>0,
+                    'y'=>0,
+                    'z'=>0
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function proyectose(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                
 
                 $proyectosSelgestiunEstudiantes = TramiteSelgestiun::join("tb_proyecto as p","p.tb_tramite_id","tb_tramite.tb_tramite_id")
                                                     ->join("tb_funcion as f","f.tb_tramite_id","tb_tramite.tb_tramite_id")
@@ -184,7 +210,36 @@ class ControladorInvestigacion extends Controller
                                                     ->where("f.tb_funcion_nombre","AUTOR")
                                                     ->where("p.tb_tipoproyecto_id",7)
                                                     ->orderBy("p.tb_proyecto_id")
-                                                    ->get();
+                                                    ->paginate(20);
+
+
+                return view('/proyectose',[
+                    'usuario'=>$usuario,
+                    'mensaje'=>$mensaje,
+                    
+                    'proyectosSelgestiunEstudiantes'=>$proyectosSelgestiunEstudiantes,
+                    'w'=>0,
+                    'y'=>0,
+                    'z'=>0
+                ]);
+            }else{
+                $request->session()->put("mensaje","NO TIENE ACCESO AL MENÚ");
+                return redirect ("/inicio");
+            }
+        }else{
+            return redirect("/index");
+        }
+    }
+
+    public function proyectosd(Request $request,  Response $response) {
+        $usuario = $request->session()->get('usuario');
+        if($this->ComprobarUsuario($usuario)){
+            if(true){
+                $mensaje = $request->session()->get('mensaje');
+                $request->session()->forget('mensaje');
+                
+                //$tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
+            
 
                 $proyectosSelgestiunDocentes = TramiteSelgestiun::join("tb_proyecto as p","p.tb_tramite_id","tb_tramite.tb_tramite_id")
                                                     ->join("tb_funcion as f","f.tb_tramite_id","tb_tramite.tb_tramite_id")
@@ -192,13 +247,10 @@ class ControladorInvestigacion extends Controller
                                                     ->where("f.tb_funcion_nombre","AUTOR")
                                                     ->where("p.tb_tipoproyecto_id",8)
                                                     ->orderBy("p.tb_proyecto_id")
-                                                    ->get();
-                return view('/proyectos',[
+                                                    ->paginate(20);
+                return view('/proyectosd',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,
-                    
-                    'proyectos'=>$proyectos,
-                    'proyectosSelgestiunEstudiantes'=>$proyectosSelgestiunEstudiantes,
                     'proyectosSelgestiunDocentes'=>$proyectosSelgestiunDocentes,
                     'w'=>0,
                     'y'=>0,
@@ -303,7 +355,7 @@ class ControladorInvestigacion extends Controller
             //$investigador = $request->input("investigador");
             $fecha = $request->input("fecha");
             $fecha2 = $request->input("fecha2");
-            $linea = $request->input("linea");
+            //$linea = $request->input("linea");
             $informacion = $request->input("informacion");
             DB::beginTransaction();
             try{
@@ -320,11 +372,11 @@ class ControladorInvestigacion extends Controller
                 // }else if($modalidad=="G"){
                 $proyecto->id_tipo_grupo = $tipo_grupo;
                 // }
-                if($linea>0){
-                    $proyecto->id_linea = $linea;
-                }else{
-                    $proyecto->id_linea = null;
-                }
+                // if($linea>0){
+                //     $proyecto->id_linea = $linea;
+                // }else{
+                //     $proyecto->id_linea = null;
+                // }
                 $proyecto->fecha = $fecha;
                 $proyecto->fecha2 = $fecha2;
                 $proyecto->informacion= $informacion;
