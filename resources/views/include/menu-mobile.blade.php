@@ -1,13 +1,12 @@
 <!--MENÚ MOBILE-->
 <ul id="mobile-menu" data-collapsible="accordion" class="collapsible side-nav">
+  @if($usuario->id_facultad==null)
   <div class="divider"></div>
   <li>
       <a class="collapsible-header waves-effect blue darken-2 white-text">CONFIGURACIÓN</a>
       <div class="collapsible-body">
           <ul>
               <li><a href="usuarios" class="waves-effect">USUARIOS</a></li>
-              <div class="divider"></div>
-              <li><a href="facultades" class="waves-effect">FACULTADES</a></li>
               <div class="divider"></div>
               <li><a href="tipos-proyectos" class="waves-effect">TIPOS DE PROYECTOS</a></li>
               <div class="divider"></div>
@@ -16,6 +15,7 @@
           </ul>
       </div>
   </li>
+  @endif
   <div class="divider"></div>
   <li>
       <a class="collapsible-header waves-effect blue darken-2 white-text">INVESTIGACIÓN</a>

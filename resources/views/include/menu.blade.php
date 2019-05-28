@@ -7,6 +7,7 @@
                 INICIO
             </a>
         </li>
+        @if($usuario->id_facultad==null)
         <li>
             <a data-activates="dropdown_configuracion" class="dropdown-button waves-effect">
                 CONFIGURACIÓN
@@ -14,11 +15,12 @@
             </a>
             <ul id="dropdown_configuracion" class="dropdown-content">
                 <li><a href="usuarios" class="waves-effect">USUARIOS</a></li>
-                <li><a href="facultades" class="waves-effect">FACULTADES</a></li>
+                <!-- <li><a href="facultades" class="waves-effect">FACULTADES</a></li> -->
                 <li><a href="tipos-proyectos" class="waves-effect">TIPOS DE PROYECTOS</a></li>
                 <li><a href="tipos-grupos" class="waves-effect">TIPOS DE GRUPOS</a></li>
             </ul>
         </li>
+        @endif
         <li>
             <a data-activates="dropdown_investigacion" class="dropdown-button waves-effect">
                 INVESTIGACIÓN
