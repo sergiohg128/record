@@ -1,4 +1,10 @@
 <!--MENÚ MOBILE-->
+<style>
+  
+  .side-nav a{
+    height: auto !important;
+  }
+</style>
 <ul id="mobile-menu" data-collapsible="accordion" class="collapsible side-nav">
   @if($usuario->id_facultad==null)
   <div class="divider"></div>
