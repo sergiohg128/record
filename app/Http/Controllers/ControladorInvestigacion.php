@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use App\Entrega;
-use App\Escuela;
-use App\Facultad;
+use App\EscuelaSelgestiun;
+use App\FacultadSelgestiun;
 use App\Investigador;
 use App\InvestigadorProyecto;
 use App\Linea;
@@ -99,12 +99,16 @@ class ControladorInvestigacion extends Controller
                 //    $investigadores = $investigadores->where("escuela.id_facultad",$usuario->id_facultad);
                 //}
                 //$investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
-
                 $investigadores = UsuarioSelgestiun::select("tb_usuario.*","tb_permiso_cargo")
                                                     ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
                                                     ->whereIn("tb_permiso_cargo",["DOCENTE","ALUMNO"])
-                                                    ->where("tb_permiso_estado","ACTIVO")
-                                                    ->orderBy("tb_usuario_apellidopaterno")
+                                                    ->where("tb_permiso_estado","ACTIVO");
+                                                    
+                if($usuario->id_facultad>0){
+                    $investigadores = $investigadores->where("tp.tb_facultad_id",$usuario->id_facultad);
+                }
+
+                $investigadores = $investigadores->orderBy("tb_usuario_apellidopaterno")
                                                     ->orderBy("tb_usuario_apellidomaterno")
                                                     ->orderBy("tb_usuario_nombre")
                                                     ->get();
@@ -134,6 +138,8 @@ class ControladorInvestigacion extends Controller
             $rol = $request->input("rol");
             DB::beginTransaction();
             try{
+                
+
                 $id_investigador = $request->input("investigador");
                 $id_proyecto = $request->input("proyecto");
                 if($modo=="nuevo"){
@@ -151,6 +157,14 @@ class ControladorInvestigacion extends Controller
                 $investigadorP->id_investigador = $id_investigador;
                 $investigadorP->id_proyecto = $id_proyecto;
                 $investigadorP->rol = $rol;
+
+
+                $usuarioselgestiun = UsuarioSelgestiun::join("tb_permiso","tb_usuario.tb_usuario_id","tb_permiso.tb_usuario_id")
+                                        ->leftJoin("tb_escuela","tb_escuela.tb_escuela_id","tb_permiso.tb_escuela_id")
+                                        ->where("tb_usuario.tb_usuario_id",$id_investigador)->first();
+                $investigadorP->id_facultad = $usuarioselgestiun->tb_facultad_id;
+                $investigadorP->id_escuela = $usuarioselgestiun->tb_escuela_id;
+
                 $investigadorP->save();
                 $request->session()->put("mensaje","Investigador Guardado");
                 DB::commit();
@@ -208,7 +222,7 @@ class ControladorInvestigacion extends Controller
                                                     ->join("tb_funcion as f","f.tb_tramite_id","tb_tramite.tb_tramite_id")
                                                     ->join("tb_usuario as u","u.tb_usuario_id","f.tb_usuario_id")
                                                     ->where("f.tb_funcion_nombre","AUTOR")
-                                                    ->where("p.tb_tipoproyecto_id",7)
+                                                    ->whereIn("p.tb_tipoproyecto_id",[7,19,20,21,22,23])
                                                     ->orderBy("p.tb_proyecto_id")
                                                     ->paginate(20);
 
@@ -574,7 +588,7 @@ class ControladorInvestigacion extends Controller
                 $tramite = TramiteSelgestiun::find($id);
                 $proyecto = ProyectoSelgestiun::join("tb_area as ta","tb_proyecto.tb_area_id","ta.tb_area_id")
                                             ->join("tb_linea as tl","tb_proyecto.tb_linea_id","tl.tb_linea_id")
-                                            ->join("tb_sublinea as ts","tb_proyecto.tb_sublinea_id","ts.tb_sublinea_id")
+                                            ->leftJoin("tb_sublinea as ts","tb_proyecto.tb_sublinea_id","ts.tb_sublinea_id")
                                             ->where("tb_tramite_id",$id)->first();
                 $fases = FaseSelgestiun::join("tb_datosfase as df","df.tb_datosfase_numero","tb_fase.tb_fase_numero")
                             ->where("tb_tramite_id",$id)->get();

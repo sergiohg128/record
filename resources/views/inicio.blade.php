@@ -14,9 +14,7 @@
             </div>
             <div class="row">
                 <li><a href="usuarios" class="waves-effect">USUARIOS</a></li>
-                <li><a href="facultades" class="waves-effect">FACULTADES</a></li>
                 <li><a href="tipos-proyectos" class="waves-effect">TIPOS DE PROYECTOS</a></li>
-                <li><a href="tipos-investigadores" class="waves-effect">TIPOS DE INVESTIGADORES</a></li>
                 <li><a href="tipos-grupos" class="waves-effect">TIPOS DE GRUPOS</a></li>
             </div>
         </div>

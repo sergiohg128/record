@@ -54,14 +54,12 @@
                <thead>
                  <th>Fase</th>
                  <th>Fecha</th>
-                 <th>Ir</th>
                </thead>
                <tbody id="filas">
                  @foreach($fases as $fase)
                     <tr>
                        <td>{{$fase->tb_datosfase_nombre}}</td>
                        <td>{{$fase->tb_fase_fecha}}</td>
-                       <td><a href="fase-selgestiun?id={{$fase->tb_fase_id}}"><button class="btn"><i class="material-icons">input</i></button></a></td>
                      </tr>
                  @endforeach
                </tbody>

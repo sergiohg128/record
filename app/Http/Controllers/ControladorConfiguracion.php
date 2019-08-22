@@ -8,8 +8,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
-use App\Escuela;
-use App\Facultad;
+use App\EscuelaSelgestiun;
+use App\FacultadSelgestiun;
 use App\Investigador;
 use App\InvestigadorProyecto;
 use App\Linea;
@@ -70,7 +70,7 @@ class ControladorConfiguracion extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $facultades = Facultad::where("estado","N")->orderBy("nombre")->get();
+                $facultades = FacultadSelgestiun::orderBy("tb_facultad_nombre")->get();
                 return view('/facultades',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,

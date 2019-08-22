@@ -17,10 +17,10 @@ class Usuario extends Model
 
     public function facultad(){
     	if($this->id_facultad>0){
-    		return Facultad::find($this->id_facultad);
+    		return FacultadSelgestiun::find($this->id_facultad);
     	}else{
-    		$facultad = new Facultad();
-    		$facultad->nombre = "-";
+    		$facultad = new FacultadSelgestiun();
+    		$facultad->tb_facultad_nombre = "-";
     		return $facultad;
     	}
     }

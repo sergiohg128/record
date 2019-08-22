@@ -49,7 +49,7 @@
                         <select name="facultad" id="facultades" style="width: 100%;" class="browser-default">
                           <option value="0">Todos</option>
                           @forelse($facultades as $facultad)
-                              <option value="{{$facultad->id}}">{{$facultad->nombre}}</option>
+                              <option value="{{$facultad->tb_facultad_id}}">{{$facultad->tb_facultad_nombre}}</option>
                           @empty
                               <option value="0">No hay facultades</option>
                           @endforelse
@@ -91,7 +91,7 @@
                         <select name="escuela" id="escuelas" style="width: 100%;" class="browser-default">
                           <option value="0">Todos</option>
                           @forelse($escuelas as $escuela)
-                              <option value="{{$escuela->id}}">{{$escuela->nombre}}</option>
+                              <option value="{{$escuela->tb_escuela_id}}">{{$escuela->tb_escuela_nombre}}</option>
                           @empty
                               <option value="0">No hay escuelas</option>
                           @endforelse
@@ -163,88 +163,5 @@
             </div>
         </div>
         
-        <div class="row">
-            <div class="col s10 offset-s1 center card">
-                <div class="titulo row" id="programa">
-                    <h5>INVESTIGACIONES POR PROGRAMAS</h5>
-                </div>
-                <form method="POST" action="reporte" target="_blank">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="tipo" value="6">
-                    <div class="col s12 m6 l5 input-field">
-                        PROGRAMA
-                        <select name="programa" id="programas"  style="width:100%;" class="browser-default">
-                          <option value="0">Elija una programa</option>
-                          @forelse($programas as $programa)
-                              <option value="{{$programa->id}}">{{$programa->nombre}}</option>
-                          @empty
-                              <option value="0">No hay programas</option>
-                          @endforelse
-                        </select>
-                    </div>
-                    <div class="col s12 m6 l3 center input-field">
-                        <div class="col s3">
-                            <label>Desde</label>
-                        </div>
-                        <div class="col s9">
-                            <input type="date" name="desde" value="">
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l3 center input-field">
-                        <div class="col s3">
-                            <label>Hasta</label>
-                        </div>
-                        <div class="col s9">
-                            <input type="date" name="hasta" value="">
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l1 input-field">
-                        <button type="submit" class="btn"><i class="material-icons">input</i></button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col s10 offset-s1 center card">
-                <div class="titulo row" id="linea">
-                    <h5>INVESTIGACIONES POR LINEA</h5>
-                </div>
-                <form method="POST" action="reporte" target="_blank">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="tipo" value="7">
-                    <div class="col s12 m6 l5 input-field">
-                        LINEA
-                        <select name="linea" id="lineas"  style="width:100%;" class="browser-default">
-                          <option value="0">Elija una linea</option>
-                          @forelse($lineas as $linea)
-                              <option value="{{$linea->id}}">{{$linea->nombre}}</option>
-                          @empty
-                              <option value="0">No hay lineas</option>
-                          @endforelse
-                        </select>
-                    </div>
-                    <div class="col s12 m6 l3 center input-field">
-                        <div class="col s3">
-                            <label>Desde</label>
-                        </div>
-                        <div class="col s9">
-                            <input type="date" name="desde" value="">
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l3 center input-field">
-                        <div class="col s3">
-                            <label>Hasta</label>
-                        </div>
-                        <div class="col s9">
-                            <input type="date" name="hasta" value="">
-                        </div>
-                    </div>
-                    <div class="col s12 m6 l1 input-field">
-                        <button type="submit" class="btn"><i class="material-icons">input</i></button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
     @include('include.footer')

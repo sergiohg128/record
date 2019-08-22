@@ -26,7 +26,7 @@
                        <td>{{$w = $w + 1}}</td>
                        <td>{{$usuariox->completo()}}</td>
                        <td>{{$usuariox->cuenta}}</td>
-                       <td>{{$usuariox->facultad()->nombre}}</td>
+                       <td>{{$usuariox->facultad()->tb_facultad_abreviatura}}</td>
                        <td><a href="usuario-formulario?id={{$usuariox->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
                        <td><a onclick="modalusuario({{$usuariox->id}},'restablecer')" class="btn"><i class="material-icons">replay</i></a></td>
                        <td><a onclick="modalusuario({{$usuariox->id}},'eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>

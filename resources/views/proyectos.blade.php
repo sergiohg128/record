@@ -27,7 +27,7 @@
                        <td class="left">{{$proyecto->titulo}}</td>
                        <td>{{$proyecto->responsable()}}</td>
                        <td>{{$proyecto->tipo()->nombre}}</td>
-                       <!-- <td>{{$proyecto->linea()->nombre}}</td> -->
+                       <td>{{date('d/m/Y',strtotime($proyecto->fecha))}}</td>
                        <td><a href="proyecto?id={{$proyecto->id}}" class="btn"><i class="material-icons">input</i></a></td>
                        <td><a href="proyecto-formulario?id={{$proyecto->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
                        <td><a onclick="modalproyecto({{$proyecto->id}},'eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>

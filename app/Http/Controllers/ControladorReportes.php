@@ -8,8 +8,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
-use App\Escuela;
-use App\Facultad;
+use App\EscuelaSelgestiun;
+use App\FacultadSelgestiun;
 use App\Investigador;
 use App\InvestigadorProyecto;
 use App\Linea;
@@ -124,15 +124,12 @@ class ControladorReportes extends Controller
             if(true){
                 $mensaje = $request->session()->get('mensaje');
                 $request->session()->forget('mensaje');
-                $facultades = Facultad::where("estado","N")->orderBy("nombre")->get();
-                $escuelas = Escuela::where("estado","N")->orderBy("nombre")->get();
-                $programas = Programa::where("estado","N")->orderBy("nombre")->get();
-                $lineas = Linea::where("estado","N")->orderBy("nombre")->get();
-                //$investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
+                $facultades = FacultadSelgestiun::orderBy("tb_facultad_nombre")->get();
+                $escuelas = EscuelaSelgestiun::orderBy("tb_escuela_nombre")->get();            //$investigadores = Investigador::where("estado","N")->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
                 //$grupos = Grupo::where("estado","N")->orderBy("nombre")->get();
                 $investigadores = UsuarioSelgestiun::select("tb_usuario.*")
                                                     ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
-                                                    ->where("tb_permiso_cargo","DOCENTE")
+                                                    ->whereIn("tb_permiso_cargo",["ALUMNO","DOCENTE"])
                                                     ->where("tb_permiso_estado","ACTIVO")
                                                     ->orderBy("tb_usuario_apellidopaterno")
                                                     ->orderBy("tb_usuario_apellidomaterno")
@@ -145,8 +142,6 @@ class ControladorReportes extends Controller
                     'mensaje'=>$mensaje,
                     'facultades'=>$facultades,
                     'escuelas'=>$escuelas,
-                    'programas'=>$programas,
-                    'lineas'=>$lineas,
                     'investigadores'=>$investigadores,
                     //'grupos'=>$grupos,
                     'desde'=>$desde,
@@ -170,10 +165,8 @@ class ControladorReportes extends Controller
 
         $proyectos = Proyecto::
                         select("proyecto.id","proyecto.titulo","proyecto.id_tipo_proyecto","proyecto.id_linea","proyecto.fecha")
+                        ->distinct()
                         ->leftjoin("investigador_proyecto","proyecto.id","investigador_proyecto.id_proyecto")
-                        ->leftjoin("investigador","investigador_proyecto.id_investigador","investigador.id")
-                        ->leftjoin("escuela","investigador.id_escuela","escuela.id")
-                        ->leftjoin("linea","proyecto.id_linea","linea.id")
                         ->where("proyecto.estado","N");
         if(!empty($desde)){
             $proyectos = $proyectos->where("fecha",">=",$desde);
@@ -186,10 +179,10 @@ class ControladorReportes extends Controller
                 
                 break;
             case 2:
-                $proyectos = $proyectos->where("escuela.id_facultad",$request->input("facultad"));
+                $proyectos = $proyectos->where("investigador_proyecto.id_facultad",$request->input("facultad"));
                 break;
             case 3:
-                $proyectos = $proyectos->where("escuela.id",$request->input("escuela"));
+                $proyectos = $proyectos->where("investigador_proyecto.id_escuela",$request->input("escuela"));
                 break;
             case 4:
                 $proyectos = $proyectos->where("investigador_proyecto.id_investigador",$request->input("investigador"));
@@ -219,7 +212,6 @@ class ControladorReportes extends Controller
                             <th>Titulo</th>
                             <th>Responsable</th>
                             <th>Tipo</th>
-                            <th>Linea</th>
                             <th>Fecha</th>
                         </tr>';
         $cont = 0;
@@ -232,7 +224,6 @@ class ControladorReportes extends Controller
                             <td>'.$proyecto->titulo.'</td>
                             <td>'.$proyecto->responsable().'</td>
                             <td>'.$proyecto->tipo()->nombre.'</td>
-                            <td>'.$proyecto->linea()->nombre.'</td>
                             <td>'.date('d/m/Y',strtotime($proyecto->fecha)).'</td>
                         </tr>';
         }
@@ -241,12 +232,37 @@ class ControladorReportes extends Controller
 
 
         //SELGESTIUN
-        if($tipo==4){
-            $proyectos2 = ProyectoSelgestiun::join("tb_tramite","tb_proyecto.tb_tramite_id","tb_tramite.tb_tramite_id")
-                                            ->join("tb_funcion as tf","tf.tb_tramite_id","tb_tramite.tb_tramite_id")
-                                            ->where("tf.tb_usuario_id",$request->input("investigador"))
+        if($tipo>0){
+            $proyectos2 = ProyectoSelgestiun::
+                select("tb_proyecto.*")->distinct()->
+                join("tb_escuela","tb_proyecto.tb_escuela_id","tb_escuela.tb_escuela_id")
+                ->join("tb_tramite","tb_proyecto.tb_tramite_id","tb_tramite.tb_tramite_id");
+            if($tipo==4){
+                $proyectos2 = $proyectos2->join("tb_funcion as tf","tf.tb_tramite_id","tb_tramite.tb_tramite_id");
+            }
+            $proyectos2 = $proyectos2->join("tb_fase","tb_tramite.tb_tramite_id","tb_fase.tb_tramite_id");
+
+
+            if(!empty($desde)){
+                $proyectos2 = $proyectos2->where("tb_fase_numero",1)->where("tb_fase_fecha",">=",$desde);
+            }
+            if(!empty($hasta)){
+                $proyectos2 = $proyectos2->where("tb_fase_numero",1)->where("tb_fase_fecha","<=",$hasta);
+            }
+            if($tipo==1){
+                
+            }
+            if($tipo==2){
+                $proyectos2 = $proyectos2->where("tb_escuela.tb_facultad_id",$request->input("facultad"));
+            }
+            if($tipo==3){
+                $proyectos2 = $proyectos2->where("tb_escuela.tb_escuela_id",$request->input("escuela"));
+            }
+            if($tipo==4){
+                $proyectos2 = $proyectos2->where("tf.tb_usuario_id",$request->input("investigador"));
+            }
                                             //->where("tf.tb_tramite_id","tb_tramite.tb_tramite_id")
-                                            ->where("tb_tramite_estado","<>",14)
+            $proyectos2 = $proyectos2->where("tb_tramite_estado","<>",14)
                                             ->get();
 
 
@@ -257,9 +273,15 @@ class ControladorReportes extends Controller
                     '<table class="tablacuerpo">
                         <tr>
                             <th>N°</th>
-                            <th>Titulo</th>
-                            <th>Cargo</th>
-                            <th>Estado</th>
+                            <th>Titulo</th>';
+            if($tipo==1){
+                $html = $html . '<th>Facultad</th>';
+            }
+            if($tipo==4){
+                $html = $html . '<th>Cargo</th>';
+            }
+            $html = $html.
+                    '<th>Estado</th>
                         </tr>';
 
             foreach($proyectos2 as $proyecto){
@@ -271,9 +293,14 @@ class ControladorReportes extends Controller
                 $html = $html.
                             '<tr>
                                 <td>'.$cont.'</td>
-                                <td>'.$proyecto->tb_proyecto_titulo.'</td>
-                                <td>'.$proyecto->tb_funcion_nombre.'</td>
-                                <td>'.$estado.'</td>
+                                <td>'.$proyecto->tb_proyecto_titulo.'</td>';
+                if($tipo==1){
+                    $html = $html . '<td>'.$proyecto->tb_escuela_nombre.'</td>';
+                }
+                if($tipo==4){
+                    $html = $html . '<td>'.$proyecto->tb_funcion_nombre.'</td>';
+                }
+                $html = $html.'<td>'.$estado.'</td>
                             </tr>';
             }
             $html = $html . '</table>';
