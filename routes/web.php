@@ -17,6 +17,10 @@ Route::get('/inicio','Controlador@inicio');
 Route::post('/login','Controlador@login');
 Route::get('/logout','Controlador@logout');
 
+Route::get('/pass','Controlador@pass');
+Route::post('/pass','Controlador@passPost');
+Route::post('/restablecer-usuario','Controlador@restablecerUsuario');
+
 //CONFIGURACION
 Route::get('/usuarios','ControladorConfiguracion@usuarios');
 Route::get('/usuario-formulario','ControladorConfiguracion@usuarioFormulario');

@@ -116,6 +116,41 @@ class Controlador extends Controller
             return redirect("/index");
         }
     }
+
+    public function PassPost(Request $request,  Response $response) {
+        
+        $pass = $request->input('pass');
+        $pass2 = $request->input('pass2');
+        $pass3 = $request->input('pass3');
+
+        $usuario = $request->session()->get('usuario');
+        if($pass==$usuario->password){
+            if($pass2==$pass3){
+                $usuario2 = Usuario::where('cuenta',$usuario->cuenta)->first();
+                $usuario2->password = $pass2;
+                $usuario2->save();
+                $request->session()->put('mensaje', "CONTASEÑA CAMBIADA CORRECTAMENTE");
+                $usuario = $request->session()->put('usuario',$usuario2);
+                return redirect("/index");
+            }else{
+                $request->session()->put('mensaje', "LA NUEVA CONTASEÑA NO ES IGUAL A LA CONFIRMACIÓN");
+                return redirect("/pass");
+            }
+        }else{
+            $request->session()->put('mensaje', "LA CONTRASEÑA ACTUAL ES INCORRECTA");
+            return redirect("/pass");
+        }
+    }
+
+    public function RestablecerUsuario(Request $request,  Response $response) {
+        
+        $id = $request->input('id');
+        $usuario = Usuario::find($id);
+        $usuario->password = "123";
+        $usuario->save();
+        $request->session()->put('mensaje', "LA CONTRASEÑA HA SIDO RESTABLECIDA");
+        return redirect("/usuarios");
+    }
     
 }
     

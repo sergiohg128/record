@@ -656,7 +656,7 @@ class ControladorConfiguracion extends Controller
                     $usuario = Usuario::find($id);
                     $modo = "editar";
                 }
-                $facultades = Facultad::where("estado","N")->orderBy("nombre")->get();
+                $facultades = FacultadSelgestiun::orderBy("tb_facultad_nombre")->get();
                 return view('/usuario-formulario',[
                     'usuario'=>$usuario,
                     'mensaje'=>$mensaje,

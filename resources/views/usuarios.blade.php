@@ -16,9 +16,7 @@
                  <th>Cuenta</th>
                  <th>Facultad</th>
                  <th>Editar</th>
-                 <th>Restablecer Contraseña</th>
-                 <!--<th>Desactivar</th>-->
-                 <th>Eliminar</th>
+                 <th>Restablecer contaseña</th>
                </thead>
                <tbody id="filas">
                  @forelse($usuarios as $usuariox)
@@ -28,8 +26,7 @@
                        <td>{{$usuariox->cuenta}}</td>
                        <td>{{$usuariox->facultad()->tb_facultad_abreviatura}}</td>
                        <td><a href="usuario-formulario?id={{$usuariox->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
-                       <td><a onclick="modalusuario({{$usuariox->id}},'restablecer')" class="btn"><i class="material-icons">replay</i></a></td>
-                       <td><a onclick="modalusuario({{$usuariox->id}},'eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>
+                       <td><a onclick="modalusuario({{$usuariox->id}},'{{$usuario->nombre}}','restablecer')" class="btn"><i class="material-icons">replay</i></a></td>
                      </tr>
                  @empty
                      <tr id="filaempty">
@@ -173,21 +170,21 @@
         <h5 class="center" id="subtitulo-restablecer"></h5>
     </div>
   </div>
+        <form action="restablecer-usuario" method="POST"  accept-charset="ISO-8859-1">
   <div class="row">
-        <form id="formrestablecer"  accept-charset="ISO-8859-1">
             <div class="col s12 input-field">
                 {{ csrf_field() }}
                 <input type="hidden" name="modo" value="restablecer">
                 <input type="hidden" name="id" id="id-restablecer">
             </div>
-        </form>
   </div>
     <div class="row center botones">
         <div class="col s6 center" id="divbtnrestablecer">
-            <button onclick="ajaxusuario('restablecer')" class="btn-large">Restablecer</button>
+            <button type="submit" class="btn-large">Restablecer</button>
         </div>
         <div class="col s6 center">
             <button class="modal-action modal-close btn-large red waves-effect">Cerrar</button>
         </div>
     </div>
+        </form>
 </div>

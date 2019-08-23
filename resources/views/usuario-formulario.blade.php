@@ -34,7 +34,7 @@
 			            	<select id="facultad" name="facultad" class="browser-default" style="width:100%;">
 			            		<option value="">Elija una facultad</option>
 			            		@foreach($facultades as $facultad)
-			            			<option value="{{$facultad->id}}" @if($usuario->id_facultad==$facultad->id) selected @endif>{{$facultad->nombre}}</option>
+			            			<option value="{{$facultad->tb_facultad_id}}" @if($usuario->id_facultad==$facultad->tb_facultad_id) selected @endif>{{$facultad->tb_facultad_abreviatura}}</option>
 			            		@endforeach
 			            	</select>
 			            </div>

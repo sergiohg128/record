@@ -101,11 +101,12 @@ class ControladorInvestigacion extends Controller
                 //$investigadores = $investigadores->orderBy("paterno")->orderBy("materno")->orderBy("nombres")->get();
                 $investigadores = UsuarioSelgestiun::select("tb_usuario.*","tb_permiso_cargo")
                                                     ->join("tb_permiso as tp","tp.tb_usuario_id","tb_usuario.tb_usuario_id")
+                                                    ->join("tb_escuela as te","tp.tb_escuela_id","te.tb_escuela_id")
                                                     ->whereIn("tb_permiso_cargo",["DOCENTE","ALUMNO"])
                                                     ->where("tb_permiso_estado","ACTIVO");
                                                     
                 if($usuario->id_facultad>0){
-                    $investigadores = $investigadores->where("tp.tb_facultad_id",$usuario->id_facultad);
+                    $investigadores = $investigadores->where("te.tb_facultad_id",$usuario->id_facultad);
                 }
 
                 $investigadores = $investigadores->orderBy("tb_usuario_apellidopaterno")

@@ -8,7 +8,7 @@
       </div>
       <div class="row">
           <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4">
-              <form action="usuario" method="POST" accept-charset="ISO-8859-1">
+              <form action="pass" method="POST" accept-charset="ISO-8859-1">
                     {{ csrf_field() }}
                   <input type="hidden" name="modo" value="pass">
                   <div class="input-field col s12">

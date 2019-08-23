@@ -15,10 +15,9 @@
                  <th>Nombre</th>
                  <th>Responsable</th>
                  <th>Tipo</th>
-                 <!-- <th>Linea</th> -->
+                 <th>Fecha</th>
                  <th>Ver</th>
                  <th>Editar</th>
-                 <th>Eliminar</th>
                </thead>
                <tbody id="filas">
                  @forelse($proyectos as $proyecto)
@@ -30,7 +29,6 @@
                        <td>{{date('d/m/Y',strtotime($proyecto->fecha))}}</td>
                        <td><a href="proyecto?id={{$proyecto->id}}" class="btn"><i class="material-icons">input</i></a></td>
                        <td><a href="proyecto-formulario?id={{$proyecto->id}}" class="btn green"><i class="material-icons">edit</i></a></td>
-                       <td><a onclick="modalproyecto({{$proyecto->id}},'eliminar')" class="btn red"><i class="material-icons">delete</i></a></td>
                      </tr>
                  @empty
                      <tr id="filaempty">
