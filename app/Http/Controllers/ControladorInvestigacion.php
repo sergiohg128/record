@@ -190,8 +190,14 @@ class ControladorInvestigacion extends Controller
                 
                 //$tiposproyectos = TipoProyecto::where("estado","N")->orderBy("nombre")->get();
                 
-                $proyectos = Proyecto::where("estado","N");
-                $proyectos = $proyectos->orderBy("fecha","desc")->paginate(20);
+                $proyectos = Proyecto::
+                            select("proyecto.*")
+                            ->leftJoin("investigador_proyecto as ip","proyecto.id","ip.id_proyecto")
+                            ->where("proyecto.estado","N");
+                if($usuario->id_facultad>0){
+                    $proyectos = $proyectos->where("proyecto.id_facultad",$usuario->id_facultad)->orWhere("ip.id_facultad",$usuario->id_facultad);
+                }
+                $proyectos = $proyectos->orderBy("proyecto.fecha","desc")->paginate(20);
 
                 return view('/proyectos',[
                     'usuario'=>$usuario,
@@ -395,6 +401,7 @@ class ControladorInvestigacion extends Controller
                 $proyecto->fecha = $fecha;
                 $proyecto->fecha2 = $fecha2;
                 $proyecto->informacion= $informacion;
+                $proyecto->id_facultad = $usuario->id_facultad;
                 $proyecto->save();
                 $request->session()->put("mensaje","Proyecto Guardado");
                 DB::commit();
