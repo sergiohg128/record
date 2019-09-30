@@ -50,12 +50,6 @@
               <li><a href="reportes#escuela" class="waves-effect">INVESTIGACIONES POR ESCUELA</a></li>
               <div class="divider"></div>
               <li><a href="reportes#investigador" class="waves-effect">INVESTIGACIONES POR INVESTIGADOR</a></li>
-              <div class="divider"></div>
-              <li><a href="reportes#grupo" class="waves-effect">INVESTIGACIONES POR GRUPO</a></li>
-              <div class="divider"></div>
-              <li><a href="reportes#programa" class="waves-effect">INVESTIGACIONES POR PROGRAMA</a></li>
-              <div class="divider"></div>
-              <li><a href="reportes#linea" class="waves-effect">INVESTIGACIONES POR LINEA</a></li>
           </ul>
       </div>
   </li>

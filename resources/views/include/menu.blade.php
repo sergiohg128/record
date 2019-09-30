@@ -43,9 +43,6 @@
                 <li><a href="reportes#facultad" class="waves-effect">POR FACULTAD</a></li>
                 <li><a href="reportes#escuela" class="waves-effect">POR ESCUELA</a></li>
                 <li><a href="reportes#investigador" class="waves-effect">POR INVESTIGADOR</a></li>
-                <li><a href="reportes#grupo" class="waves-effect">POR GRUPO</a></li>
-                <li><a href="reportes#programa" class="waves-effect">POR PROGRAMA</a></li>
-                <li><a href="reportes#linea" class="waves-effect">POR LINEA</a></li>
             </ul>
         </li>
         <li>
